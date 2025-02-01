@@ -21,8 +21,7 @@ try {
     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    echo json_encode(["message" => "Connexion réussie à la base de données."]);
-    
+
     // Traitement des données envoyées via POST (inscription)
     if (isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirmation'])) {
         $email = $_POST['email'];
