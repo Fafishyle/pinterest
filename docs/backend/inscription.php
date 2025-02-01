@@ -2,6 +2,35 @@
     header('Content-Type: application/json');
     // Je me connecte à la base de données.
 
+    // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+    $DATABASE_URL = getenv('postgres://uc6roibm5k3en1:p3939911c6d834d6448c9fbb4897aea2ee286bd2572d7999e0f8f36fe5753849e@c8m0261h0c7idk.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d6m1ssvjvankel'
+    );
+
+    if (!$DATABASE_URL) {
+        die("Erreur: DATABASE_URL non définie.");
+    }
+
+    // Décomposer l'URL en ses parties
+    $parts = parse_url($DATABASE_URL);
+    $host = $parts["host"];
+    $user = $parts["user"];
+    $pass = $parts["pass"];
+    $port = $parts["port"];
+    $dbname = ltrim($parts["path"], "/");
+
+
+    // Connexion à PostgreSQL
+    try {
+        $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
+        echo "Connexion réussie à la base de données.";
+    } catch (PDOException $e) {
+        die("Erreur de connexion: " . $e->getMessage());
+    }
+
+
+    
     $con = mysqli_connect('localhost', 'root', '') or die (mysqli_error());
         mysqli_select_db($con,'bdd') or die (mysqli_error($con));
 
