@@ -27,7 +27,7 @@ try {
 
     // Vérification si toutes les données nécessaires sont envoyées via POST
     if (!isset($_POST['email']) || !isset($_POST['password']) || !isset($_POST['confirmation'])) {
-        echo json_encode(["error" => "Données manquantes."]);
+        echo json_encode(["error" => "Données manquantes!!!!!!"]);
         exit;
     }
 
