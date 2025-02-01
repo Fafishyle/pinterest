@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<?php session_start ();?>
+<php>echo "HELOOOOOO";</php>
+<html lang="en-US">
+	<HEAD>
+        <style>
+            .titre {
+			font: 200% sans-serif; 
+			text-shadow:#ff006e 2.5px 2.5px 0, #8338ec 5px 5px 0, #3a86ff 7.5px 7.5px 0,#333 10px 10px 10px;color:#ffcc00;
+ 			background-color:#D8BFD8;
+				}
+                .alert {
+			padding: 20px;
+			background-color: #D8BFD8; 
+			color: #8A2BE2;
+			margin-bottom: 15px;
+				}
+
+                .center {
+             margin: auto;                                                                                      
+             width: 50%;
+             border: 3px solid green;
+            padding: 10px;
+                }
+
+        </style>
+		<meta charset="utf-8" />
+        <TITLE  >Ajouter une photo</TITLE>
+    </HEAD>
+    <BODY>
+        <?php 
+        if (isset($_SESSION['logged']))
+        {
+            echo"Connecté: " . $_SESSION['logged'] ."<br>";
+        }
+        if(isset($_SESSION['debut']))
+        {	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
+            <br>";
+        }
+    ?>
+        
+    <div>
+        <a href="index.html" > 
+            <h5><span class="titre">◄ |M.P.|</span></h5>
+            <span class="alert"> retour à l'accueil</span>
+        </a>
+        </div>
+
+        <BODY>
+        
+
+
+            <form action="ajouter.html" method="POST" name="formulaire" enctype="multipart/form-data">
+    
+                <br/>
+              
+                <div class="titre"><h2> Quelle nouvelle photo? </h2></div>
+                
+                <input type="file" name="nomFich" id="nomFich" /><br />
+    
+                <div style="text-align: left;">
+                    <p>
+                        <label for="description">Decrire la photo en une phrase: </label><br />
+                        <textarea name="description" id="description" rows="5" cols="30"></textarea>
+                    </p>
+                </div>
+    
+                <div style="text-align: left;">
+                    <label for="categorie">Choisir une catégorie: </label><br />
+    
+                    <select name="categorie" id="categorie">
+                        <option value="">--Veuillez choisir une catégorie--</option>
+                        <option value="1" >Animaux</option>
+                        <option value="2">Vetements</option>
+                        <option value="3">Voitures</option>
+                        <option value="4">Nourriture</option>
+        
+                    </select>
+                </div>
+                    
+                    <br/>
+                    <br/>
+    
+                <div style="text-align: left;">
+                    <input type="submit" name="submit" value="Envoyer">
+                </div>
+    
+                </form>
+    
+                <br/>
+                <br/>
+            
+                <?php
+    
+    
+                function recup_id()
+            {
+                $bdd = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
+            
+                //récupère la valeur envoyé par l'URL
+                
+                $req = $bdd->query("SELECT photoId FROM photo ORDER BY photoId DESC LIMIT 0, 1");
+                $resultat = $req->fetch();
+                   
+                return $resultat['photoId']+1;
+            }
+            
+            // Verification du formulaire
+            
+                if (isset($_POST['submit'])){
+                
+                    $maxsize = 100000;
+                    $validExt = array('.jpg', '.jpeg', '.gif', '.png');
+                
+                    // Erreur quelconque
+            
+                    if($_FILES['nomFich']['error'] > 0){
+                
+                        echo "Une erreur est survenue lors du transfert: Verifiez que tous les champs sont remplis";
+                        die;
+                    }
+                    
+                    // Erreur de la taille
+            
+                    $filesize = $_FILES['nomFich']['size'];
+                
+                    if ($filesize > $maxsize){
+                
+                        echo "Le fichier est trop gros";
+                        die;
+                    }
+            
+                    //  Erreur du format de la photo
+            
+                    $fileName = $_FILES['nomFich']['name'];
+                    $fileExt = "." . strtolower(substr(strrchr($_FILES['nomFich']['name'], '.'), 1));
+                
+                    if(!in_array($fileExt, $validExt)){
+            
+                        echo "Le fichier n'est pas une image, vérifiez l'extension!";
+                        die;
+                    }
+            
+                    // Erreur description vide
+            
+                    $recupDescription = $_POST['description'];
+                    
+                    if($recupDescription == ""){ 
+            
+                        echo "La description doit contenir au moins une lettre";
+                        die;
+                    }
+            
+                    // Erreur categorie vide
+            
+                    $recupCategorie = $_POST['categorie'];
+            
+                    if($recupCategorie == ""){ 
+            
+                        echo "Vous devez obligatoirement choisir une catégorie!";
+                        die;
+                    }
+            
+                    
+            
+                    if (isset($_POST['submit'])){
+            
+                        $fileName = "DSC_".recup_id();
+                        $tempName = $_FILES['nomFich']['tmp_name'];
+                        
+            
+                        if (isset($fileName)){
+            
+                            if (!empty($fileName)){
+            
+                                $location = "data/";
+                                if (move_uploaded_file($tempName, $location.$fileName.$fileExt)){
+            
+                                    echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
+                                        Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
+                                        $redirec= "detail.html?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
+                                       echo " <a href=' ".$redirec." ' >REDIRECTION</a>";
+                                                                           
+                                }
+                            }
+                        }
+                    }
+            
+                    $servername = 'localhost';
+                    $username = 'root';
+                    $password = '';
+            
+                    $pdo = new PDO('mysql:host=localhost;dbname=bdd', $username, $password);
+                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            
+                    $pdo->prepare('INSERT INTO photo (nomFich, description, catId) VALUES (?, ?, ?)')
+                       ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));
+                    
+                
+                
+                }
+                    
+                
+            ?>
+
+
+    </BODY>  
+    </html>
