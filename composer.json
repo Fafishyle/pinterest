@@ -1,5 +1,5 @@
 {
-    "name": "pinterest",
+    "name": "fafishyle/mini-pinterest",
     "description": "Un site PHP avec HTML et JS",
     "require": {
         "php": "^7.4 || ^8.0"
