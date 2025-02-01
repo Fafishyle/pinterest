@@ -1,5 +1,9 @@
 <?php
     header('Content-Type: application/json');
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type");
+
     // Je me connecte à la base de données.
 
     $con = mysqli_connect('localhost', 'root', '') or die (mysqli_error());

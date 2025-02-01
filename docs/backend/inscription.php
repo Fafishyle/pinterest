@@ -1,5 +1,9 @@
 <?php
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
 
 // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
 $DATABASE_URL = getenv('DATABASE_URL');
