@@ -7,7 +7,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const motDePasse = document.getElementById('pass').value;
         const confirmationMotDePasse = document.getElementById('pass2').value;
 
-        fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/inscription.php', {
+        fetch(
+            //'https://git.heroku.com/pinterest-backend.git/inscription.php'
+            'https://pinterest-backend-a55546f8898e.herokuapp.com/backend/inscription.php'
+            //'postgres://uc6roibm5k3en1:p3939911c6d834d6448c9fbb4897aea2ee286bd2572d7999e0f8f36fe5753849e@c8m0261h0c7idk.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/d6m1ssvjvankel'
+            ,{
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -15,52 +19,20 @@ document.addEventListener("DOMContentLoaded", function () {
             body: JSON.stringify({ 
                 email: email,
                 password: motDePasse,
-                confirmation: confirmationMotDePasse
+                confirmation : confirmationMotDePasse
             })
         })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur réseau');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            const alertBox = document.createElement('div');
-            alertBox.classList.add('alert'); // Classe CSS pour l'alerte
-            alertBox.textContent = data.message || data.error; // Message d'erreur ou de succès
-
-            // Vérifie le code de statut et applique la couleur correspondante
-            if (data.error) {
-                alertBox.style.backgroundColor = 'red'; // Rouge pour erreur
-                alertBox.style.color = 'white';
+            if (data.status === '201') {
+                alert('Inscription réussie !');
             } else {
-                alertBox.style.backgroundColor = 'green'; // Vert pour succès
-                alertBox.style.color = 'white';
+                alert('Erreur: ' + data.message);
             }
-
-            // Ajoute l'alerte à l'élément body ou à un autre endroit de ton choix
-            document.body.appendChild(alertBox);
-
-            // Masquer l'alerte après 5 secondes
-            setTimeout(() => {
-                alertBox.remove();
-            }, 5000);
         })
-        .catch(error => {
-            const alertBox = document.createElement('div');
-            alertBox.classList.add('alert');
-            alertBox.textContent = 'Erreur: ' + error.message;
-            alertBox.style.backgroundColor = 'red'; // Rouge en cas de problème
-            alertBox.style.color = 'white';
-            document.body.appendChild(alertBox);
-            
-            setTimeout(() => {
-                alertBox.remove();
-            }, 5000);
-        });
+        .catch(error => console.error('Erreur:', error));
     });
 });
-
 
 
 //_______________ CONNEXION _______________
