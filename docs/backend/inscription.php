@@ -25,18 +25,23 @@ try {
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
+    // Lire les données JSON envoyées dans la requête
+    $data = json_decode(file_get_contents("php://input"), true);
+
     // Vérification si toutes les données nécessaires sont envoyées via POST
-    if (!isset($_POST['email']) || !isset($_POST['password']) || !isset($_POST['confirmation'])) {
-        echo json_encode(["email" => $_POST['email']]);
-        echo json_encode(["password" => $_POST['password']]); 
-        echo json_encode(["confirmation" => $_POST['confirmation']]); 
-        echo json_encode(["error" => "Données manquantes!!!!!!"]);
+    if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirmation'])) {
+        echo json_encode([
+            "email" => isset($data['email']) ? $data['email'] : null,
+            "password" => isset($data['password']) ? $data['password'] : null,
+            "confirmation" => isset($data['confirmation']) ? $data['confirmation'] : null,
+            "error" => "Données manquantes!!!!!!"
+        ]);
         exit;
     }
 
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirmation = $_POST['confirmation'];
+    $email = $data['email'];
+    $password = $data['password'];
+    $confirmation = $data['confirmation'];
 
     // Vérification de la correspondance des mots de passe
     if ($password !== $confirmation) {
