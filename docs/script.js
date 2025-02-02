@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
         event.preventDefault(); // Empêche le rechargement de la page
         const email = document.getElementById('email').value;
         const motDePasse = document.getElementById('pass').value;
+        const confirmationMotDePasse = document.getElementById('pass2').value;
 
         fetch(
             //'https://git.heroku.com/pinterest-backend.git/inscription.php'
@@ -15,7 +16,11 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email: email, motDePasse: motDePasse,  })
+            body: JSON.stringify({ 
+                email: email,
+                password: motDePasse,
+                confirmation : confirmationMotDePasse
+            })
         })
         .then(response => response.json())
         .then(data => {
