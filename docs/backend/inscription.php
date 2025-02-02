@@ -30,6 +30,7 @@ try {
 
     // Vérification si toutes les données nécessaires sont envoyées via POST
     if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirmation'])) {
+        http_response_code(400);
         echo json_encode([
             "email" => isset($data['email']) ? $data['email'] : null,
             "password" => isset($data['password']) ? $data['password'] : null,
@@ -45,6 +46,7 @@ try {
 
     // Vérification de la correspondance des mots de passe
     if ($password !== $confirmation) {
+        http_response_code(400);
         echo json_encode(["error" => "Les mots de passe ne correspondent pas."]);
         exit;
     }
@@ -58,17 +60,19 @@ try {
     $userCount = $stmt->fetchColumn();
 
     if ($userCount > 0) {
+        http_response_code(400);
         echo json_encode(["error" => "L'email est déjà utilisé."]);
         exit;
     } else {
         // Insertion de l'utilisateur dans la base de données
         $stmt = $pdo->prepare("INSERT INTO users (email, password) VALUES (:email, :password)");
         $stmt->execute(['email' => $email, 'password' => $hashedPassword]);
-
+        http_response_code(201);
         echo json_encode(["message" => "Inscription réussie."]);
     }
 
 } catch (PDOException $e) {
+    http_response_code(500);
     echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
 }
 ?>
