@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erreur réseau');
+                //throw new Error('Erreur réseau');
             }
             return response.json();
         })
