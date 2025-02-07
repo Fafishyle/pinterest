@@ -27,8 +27,6 @@ try {
 
     // Lire les données JSON envoyées dans la requête
     $data = json_decode(file_get_contents("php://input"), true);
-    echo ("connexion.php > data input"+$data);
-
 
 
     // Vérification des champs
