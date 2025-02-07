@@ -67,14 +67,14 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     event.preventDefault();
     console.log("Connexion détectée")
     const email = document.getElementById('email').value;
-    const motDePasse = document.getElementById('pass').value;
+    const lemotDePasse = document.getElementById('pass').value;
 
     fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, password: motDePasse })
+        body: JSON.stringify({ email: email, password: lemotDePasse })
     })
     .then(response => response.json())
     .then(data => {
@@ -87,6 +87,6 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     })
     .catch(error => console.error('Erreur:', error));
     
-    console.log("Données envoyées:", JSON.stringify({ email: email, password: motDePasse }));
+    console.log("Données envoyées:", JSON.stringify({ email: email, password: lemotDePasse }));
     
 });
