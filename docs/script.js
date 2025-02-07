@@ -2,6 +2,7 @@
 //_______________ INSCRIPTION _______________
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("formInscription").addEventListener("submit", function(event) {
+        console.log("Inscription détectée")
         event.preventDefault(); // Empêche le rechargement de la page
         const email = document.getElementById('email').value;
         const motDePasse = document.getElementById('pass').value;
@@ -68,15 +69,25 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     console.log("Connexion détectée")
     const email = document.getElementById('email').value;
     const lemotDePasse = document.getElementById('pass').value;
-
+    console.log("script.js emil > " + email);
+    console.log("script.js mdp> " + lemotDePasse);
     fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, password: lemotDePasse })
+        body: JSON.stringify({ 
+            email: email,
+            password: lemotDePasse
+        })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            //throw new Error('Erreur réseau');
+        }
+        console.log("script.js reponse json > " + response.json());
+        return response.json();
+    })
     .then(data => {
         console.log("Réponse du serveur:", data);
         if (data.status === 'success') {
