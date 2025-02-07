@@ -69,8 +69,10 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     console.log("Connexion détectée")
     const email = document.getElementById('email').value;
     const lemotDePasse = document.getElementById('pass').value;
-    console.log("script.js emil > " + email);
-    console.log("script.js mdp> " + lemotDePasse);
+    console.log("Données envoyées au serveur:", JSON.stringify({ 
+        email: email,
+        password: lemotDePasse
+    }));    
     fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php', {
         method: 'POST',
         headers: {
