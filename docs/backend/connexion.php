@@ -3,6 +3,12 @@ header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
+
 
 // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
 $DATABASE_URL = getenv('DATABASE_URL');
@@ -27,6 +33,19 @@ try {
 
     // Lire les données JSON envoyées dans la requête
     $data = json_decode(file_get_contents("php://input"), true);
+    // Debug : voir ce que PHP reçoit
+    file_put_contents("debug_log.txt", json_encode($data, JSON_PRETTY_PRINT) . "\n", FILE_APPEND);
+
+    if (!$data) {
+        http_response_code(400);
+        echo json_encode([
+            "error" => "Données manquantes ou format JSON invalide",
+            "raw_input" => file_get_contents("php://input")
+        ]);
+        exit;
+    }
+
+
 
     // Vérification des champs
     if (!isset($data['email']) || !isset($data['password'])) {
