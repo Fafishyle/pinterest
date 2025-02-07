@@ -4,8 +4,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 //empêche PHP de modifier la structure des requêtes
-ini_set('variables_order', 'EGPCS'); 
-ini_set('request_order', 'GP');
+//ini_set('variables_order', 'EGPCS'); 
+//ini_set('request_order', 'GP');
 
 
 // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
@@ -32,7 +32,7 @@ try {
     // Lire les données JSON envoyées dans la requête
     $data = json_decode(file_get_contents("php://input"), true);
     error_log(print_r($data, true));
-    var_dump($data);
+    //var_dump($data);
 
 
     // Vérification des champs
@@ -47,8 +47,8 @@ try {
     }
 
     $email = $data['email'];
-    //$password = $data['password'];
-    $password = isset($data['password']) ? $data['password'] : (isset($data['motDePasse']) ? $data['motDePasse'] : null);
+    $password = $data['password'];
+    //$password = isset($data['password']) ? $data['password'] : (isset($data['motDePasse']) ? $data['motDePasse'] : null);
 
 
     // Requête sécurisée avec un paramètre préparé

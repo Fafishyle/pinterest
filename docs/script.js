@@ -72,7 +72,8 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     console.log("Données envoyées au serveur:", JSON.stringify({ 
         email: courriel,
         password: password
-    }));    
+    }));   
+    console.log("oui") 
     fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php', {
         method: 'POST',
         headers: {
