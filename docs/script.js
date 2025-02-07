@@ -69,10 +69,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     const email = document.getElementById('email').value;
     const motDePasse = document.getElementById('pass').value;
 
-    fetch(
-        //'https://ton-backend.herokuapp.com/connexion.php'
-        'https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php'
-        , {
+    fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -81,11 +78,15 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     })
     .then(response => response.json())
     .then(data => {
+        console.log("Réponse du serveur:", data);
         if (data.status === 'success') {
             alert('Connexion réussie !');
         } else {
-            alert('Erreur: ' + data.message);
+            alert('Erreur: ' + data.error);
         }
     })
     .catch(error => console.error('Erreur:', error));
+    
+    console.log("Données envoyées:", JSON.stringify({ email: email, password: motDePasse }));
+    
 });
