@@ -80,7 +80,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
         },
         body: JSON.stringify({ 
             email: courriel,
-            password: password
+            "password": password
         })
     })
     .then(response => {
