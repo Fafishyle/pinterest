@@ -35,7 +35,7 @@ try {
             "email" => isset($data['email']) ? $data['email'] : null,
             "password" => isset($data['password']) ? $data['password'] : null,
             "confirmation" => isset($data['confirmation']) ? $data['confirmation'] : null,
-            "error" => "Données manquantes!!!!!!"
+            "error" => "Données manquantes dans la requête"
         ]);
         exit;
     }

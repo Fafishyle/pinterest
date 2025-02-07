@@ -77,7 +77,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email: email, motDePasse: motDePasse })
+        body: JSON.stringify({ email: email, password: motDePasse })
     })
     .then(response => response.json())
     .then(data => {
