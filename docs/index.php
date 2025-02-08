@@ -77,7 +77,7 @@
 
 				$ref="";
 				$co="Déconnexion";
-				$ref1="href = 'deconnexion.php' ";
+				$ref1="href = 'backend/deconnexion.php' ";
 				$targ= "''";
 
 				//Boutont ajouter une photo
