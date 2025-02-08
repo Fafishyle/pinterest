@@ -193,7 +193,8 @@
 					$stmt = $pdo->prepare("SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ");
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					echo "result> $result";
+					$c = $result['count(*)'];
+					echo "result> $c";
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
 					if ($result) {
 						$c = $result['count(*)']; // Stocke le pseudo récupéré
