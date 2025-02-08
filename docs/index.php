@@ -209,12 +209,12 @@
 						//resultat de la requête avec fetch va chercher le premier res[attribut].
 						while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
 					{
-						$res= $resultat['nomFich'];
+						$res= $resultat['nomfich'];
 						var_dump($resultat);
 						echo "fichier >$resultat";
 						//on va envoyer le photoId et le catID
-						$info1=$resultat['photoId'];
-						$info2=$resultat['catId'];
+						$info1=$resultat['photoid'];
+						$info2=$resultat['catid'];
 						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
 						{
 							echo"<div>"; //pour l'affichage du bouton sur la même ligne
