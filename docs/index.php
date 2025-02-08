@@ -73,6 +73,8 @@
 				}
 				//l'email de la session en cours
 				$affichage1 = $adm.$_SESSION['logged'];
+				$affichage1 = find_pseudo($affichage1);
+
 				$ref="";
 				$co="Déconnexion";
 				$ref1="href = 'deconnexion.php' ";
@@ -89,7 +91,6 @@
 				<a class='button_red' style=' background-color: #FFA07A;' $ref1 target=$targ >
 				<strong>$co </strong> 
 			</a>";
-			find_pseudo($affichage1);
 				echo " 			
 			<a class='button_red ' style=' background-color:#F08080;' $ref target='_blank' >
 				<strong><i>$affichage1</i></strong>
@@ -149,11 +150,9 @@
 						$stmt->execute(['email' => $email]);
 						$result = $stmt->fetch(PDO::FETCH_ASSOC);
 						if ($result) {
-							$pseudo = $result['pseudo']; // Stocke le pseudo récupéré
-							$affichage1 = $pseudo;
+							return $result['pseudo']; // Stocke le pseudo récupéré
 						} else {
-							$pseudo = "Pseudo introuvable"; // Gère le cas où l'email n'existe pas
-							$affichage1 = "Pas de pseudo";
+							return "Pseudo introuvable"; // Gère le cas où l'email n'existe pas
 						}
 					} catch (PDOException $e) {
 						http_response_code(500);
