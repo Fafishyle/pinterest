@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("formInscription").addEventListener("submit", function(event) {
         console.log("Inscription détectée")
         event.preventDefault(); // Empêche le rechargement de la page
+        const pseudo = document.getElementById('pseudo').value;
         const email = document.getElementById('email').value;
         const motDePasse = document.getElementById('pass').value;
         const confirmationMotDePasse = document.getElementById('pass2').value;
@@ -14,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ 
+                pseudo: pseudo,
                 email: email,
                 password: motDePasse,
                 confirmation: confirmationMotDePasse
@@ -69,19 +71,21 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     console.log("Connexion détectée")
     const courriel = document.getElementById('email').value;
     const password = document.getElementById('pass').value;
+    const pseudo = document.getElementById('pseudo').value;
     console.log("Données envoyées au serveur:", JSON.stringify({ 
+        pseudo: pseudo,
         email: courriel,
         password: password
     }));   
-    console.log("oui") 
     fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/connexion.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
+            pseudo: pseudo,
             email: courriel,
-            "password": password
+            password: password
         })
     })
     .then(response => {

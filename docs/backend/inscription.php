@@ -33,9 +33,10 @@ try {
     $data = json_decode(file_get_contents("php://input"), true);
 
     // Vérification si toutes les données nécessaires sont envoyées via POST
-    if (!isset($data['email']) || !isset($data['password']) || !isset($data['confirmation'])) {
+    if (!isset($data['pseudo']) || !isset($data['email']) || !isset($data['password']) || !isset($data['confirmation'])) {
         http_response_code(400);
         echo json_encode([
+            "pseudo" => isset($data['pseudo']) ? $data['pseudo'] : null,
             "email" => isset($data['email']) ? $data['email'] : null,
             "password" => isset($data['password']) ? $data['password'] : null,
             "confirmation" => isset($data['confirmation']) ? $data['confirmation'] : null,
@@ -44,6 +45,7 @@ try {
         exit;
     }
 
+    $pseudo = $data['pseudo'];
     $email = $data['email'];
     $password = $data['password'];
     $confirmation = $data['confirmation'];
@@ -69,7 +71,7 @@ try {
         exit;
     } else {
         // Insertion de l'utilisateur dans la base de données
-        $stmt = $pdo->prepare("INSERT INTO users (email, password) VALUES (:email, :password)");
+        $stmt = $pdo->prepare("INSERT INTO users (pseudo, email, password) VALUES (:pseudo, :email, :password)");
         $stmt->execute(['email' => $email, 'password' => $hashedPassword]);
         http_response_code(201);
         echo json_encode(["message" => "Inscription réussie."]);
