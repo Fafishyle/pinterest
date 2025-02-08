@@ -189,7 +189,7 @@
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
-					$stmt = $pdo->prepare("SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat= :cate ");
+					$stmt = $pdo->prepare("SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ");
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
@@ -205,7 +205,7 @@
 					}
 					
 					//ICI, il recupere le nom des fichiers selon la catégorie
-					$stmt = $pdo->prepare("SELECT p.nomFich,p.photoId,p.catId FROM categorie c NATURAL JOIN photo p  WHERE nomCat= :cate");
+					$stmt = $pdo->prepare("SELECT p.nomFich,p.photoId,p.catId FROM categorie c NATURAL JOIN photo p  WHERE nomCat = :cate");
 					$stmt->execute(['cate' => $cate]);
 						//resultat de la requête avec fetch va chercher le premier res[attribut].
 					while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
