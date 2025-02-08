@@ -92,9 +92,8 @@
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
 				try {
-                    //récupère la valeur envoyé par l'URL
+                    //récupère la valeur de l'id envoyé par l'URL
                     $recup= $_GET['idphoto'];
-                    //echo "recup > $recup";
                     // Connexion à PostgreSQL
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -102,13 +101,9 @@
 					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p WHERE nomCat ILIKE :cate ');
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-                    //$req = $projet->query("SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId='". $recup."' ");
                     $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
                     $req->execute(['recup' => $recup]);
-                    //$resultat = $req->fetch();
                     $resultat = $req->fetch(PDO::FETCH_ASSOC);
-                    //echo "resultat> $resultat";
-                    //var_dump($resultat);
                     
                     return $resultat;
                 } catch (PDOException $e) {
@@ -156,7 +151,89 @@
                 </tr>
             </tbody>
             
-        </table>    
+        </table>
+        <?php
+        
+        function affic_cat($cate)
+			{
+				header("Access-Control-Allow-Origin: *");
+				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+				header("Access-Control-Allow-Headers: Content-Type");
+				if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+					http_response_code(200);
+					exit;
+				}
+				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+				$DATABASE_URL = getenv('DATABASE_URL');
+
+				if (!$DATABASE_URL) {
+					die(json_encode(["error" => "DATABASE_URL non définie."]));
+				}
+
+				// Décomposer l'URL en ses parties
+				$parts = parse_url($DATABASE_URL);
+				$host = $parts["host"];
+				$user = $parts["user"];
+				$pass = $parts["pass"];
+				$port = $parts["port"];
+				$dbname = ltrim($parts["path"], "/");
+				try {
+					// Connexion à PostgreSQL
+					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+					]);
+					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p WHERE nomCat ILIKE :cate ');
+					$stmt->execute(['cate' => $cate]);
+					$result = $stmt->fetch(PDO::FETCH_ASSOC);
+					//Recupere le nombre de fichiers en tout selon la catégorie
+					if ($result) {
+						$c = $result['total']; // Stocke le pseudo récupéré
+						echo "<div class='alert'>
+							Nous vous avons selectionnés | $c | photos. <br>
+						</div>";
+					} else {
+						echo "<div class='alert'>
+							Aucune photo trouvée pour cette catégorie <br>
+						</div>";
+					}
+					
+					//ICI, il recupere le nom des fichiers selon la catégorie
+					$stmt = $pdo->prepare('SELECT nomFich,photoId,catId FROM categorie NATURAL JOIN photo WHERE nomCat ILIKE :cate');
+					$stmt->execute(['cate' => $cate]);
+						//resultat de la requête avec fetch va chercher le premier res[attribut].
+						while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
+					{
+						$res= $resultat['nomfich'];
+						//on va envoyer le photoId et le catID
+						$info1=$resultat['photoid'];
+						$info2=$resultat['catid'];
+						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
+						{
+							echo"<div>"; //pour l'affichage du bouton sur la même ligne
+						}
+						//afficher l'image
+						echo "
+						<a href='detail.php?idphoto=". $info1 ."&idcat=". $info2 ."'>
+							<img src='data/". $res ."' importance='auto' alt=''>
+						</a>";
+						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
+						{ echo "
+						<a class='button_red' style=' background-color: #FFA07A;' 
+						href='modifier.html?idphoto=". $info1 ."&idcat=". $info2 ."' >
+							<strong>Modifier </strong> <i>la photo</i> 
+						</a>
+						</div>
+						
+						";
+						}
+					}  
+					} catch (PDOException $e) {
+						http_response_code(500);
+						echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+					}  			
+			}
+            affic_cat("voiture");
+        ?> 
 
 
 
