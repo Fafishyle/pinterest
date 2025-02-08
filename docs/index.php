@@ -217,6 +217,7 @@
 						{
 							echo"<div>"; //pour l'affichage du bouton sur la même ligne
 						}
+						//afficher l'image
 						echo "
 						<a href='detail.html?idphoto=". $info1 ."&idcat=". $info2 ."'>
 							<img src='data/". $res ."' importance='auto' alt=''>
@@ -238,47 +239,77 @@
 					}  			
 			}
 
-			//affichage par défaut: l'accueil_toutes les photos
+			//affichage par défaut: l'accueil avec toutes les photos
 			function affic_def()
 			{
-				$bdd = new PDO("mysql:host=localhost; dbname=bdd", "root", "");
-				//ICI, il recupere le nombre de fichiers en tout selon la catégorie
-				$req_compt = $bdd->query("SELECT count(*) FROM categorie c NATURAL JOIN photo p ");
-				$compt = $req_compt->fetch();
-				$c= $compt['count(*)'];
-				echo "<h1>Toutes les photos</h1>";
-				echo "<div class='alert'>
-				Nous vous avons selectionnés | $c | photos. <br>
-				</div>";
-				$req = $bdd->query("SELECT p.nomFich,p.photoId,p.catId FROM categorie c NATURAL JOIN photo p");
-				while ($resultat = $req->fetch() )
-				{
-					//echo $resultat['nomFich'];
-					$res= $resultat['nomFich'];
+				header("Access-Control-Allow-Origin: *");
+				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+				header("Access-Control-Allow-Headers: Content-Type");
+				if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+					http_response_code(200);
+					exit;
+				}
+				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+				$DATABASE_URL = getenv('DATABASE_URL');
 
-					//on va envoyer le photoId et le catID
-					$info1=$resultat['photoId'];
-					$info2=$resultat['catId'];
-					if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
+				if (!$DATABASE_URL) {
+					die(json_encode(["error" => "DATABASE_URL non définie."]));
+				}
+
+				// Décomposer l'URL en ses parties
+				$parts = parse_url($DATABASE_URL);
+				$host = $parts["host"];
+				$user = $parts["user"];
+				$pass = $parts["pass"];
+				$port = $parts["port"];
+				$dbname = ltrim($parts["path"], "/");
+				try {
+					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+					]);
+					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
+					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p');
+					$stmt->execute(['cate' => $cate]);
+					$result = $stmt->fetch(PDO::FETCH_ASSOC);
+					$c= $result['total'];
+					echo "<h1>Accueil</h1>";
+					//echo "<div class='alert'>
+					//Nous vous avons selectionnés | $c | photos. <br>
+					//</div>";
+					//ICI, il recupere le nom des fichiers selon la catégorie
+					$stmt = $pdo->prepare('SELECT nomFich,photoId,catId FROM categorie NATURAL JOIN photo');
+					$stmt->execute(['cate' => $cate]);
+					//resultat de la requête avec fetch va chercher le premier res[attribut].
+					while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
 					{
-						echo"<div>"; //pour l'affichage du bouton sur la même ligne
+						$res= $resultat['nomfich'];
+						//on va envoyer le photoId et le catID
+						$info1=$resultat['photoid'];
+						$info2=$resultat['catid'];
+						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
+						{
+							echo"<div>"; //pour l'affichage du bouton sur la même ligne
+						}
+						echo "
+						<a href='detail.html?idphoto=". $info1 ."&idcat=". $info2 ."'>
+							<img src='data/". $res ."' importance='auto' alt=''>
+						</a>
+						
+						";
+						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
+						{ echo "
+						<a class='button_red' style=' background-color: #FFA07A;' 
+						href='modifier.html?idphoto=". $info1 ."&idcat=". $info2 ."'  >
+							<strong>Modifier </strong> <i>la photo</i> 
+						</a>
+						</div>
+						";
+						}
 					}
-					echo "
-					<a href='detail.html?idphoto=". $info1 ."&idcat=". $info2 ."'>
-						<img src='data/". $res ."' importance='auto' alt=''>
-					</a>
-					
-					";
-					if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
-					{ echo "
-					<a class='button_red' style=' background-color: #FFA07A;' 
-					href='modifier.html?idphoto=". $info1 ."&idcat=". $info2 ."'  >
-						<strong>Modifier </strong> <i>la photo</i> 
-					</a>
-					</div>
-					";
-					}
-				} 
+				} catch (PDOException $e) {
+					http_response_code(500);
+					echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+				}  	
 			}
 
 			if(!isset($_POST['submit']) && !isset($_POST['Cat'] ) && !isset($_GET['n_cat']) )
@@ -303,9 +334,7 @@
 
 			if(isset($_GET['n_cat']) && !isset($_POST['Cat']) && !isset($_POST['submit']))
 			{
-				//echo "XXXX ".$_GET['n_cat']." XXXX ";
 				$_POST['Cat']=$_GET['n_cat'];
-				//echo "XXXX ".$_POST['Cat']." XXXX ";
 				$selected = $_POST['Cat'];
 				echo '<br><h4> => Voici les photos correspendants à la catégorie <span class="titre">' . $selected . '</span></h4>';
 				echo '<br>';
