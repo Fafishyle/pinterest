@@ -162,6 +162,7 @@
 
 			function affic_cat($cate)
 			{
+				echo "categorie> $cate";
 				header("Access-Control-Allow-Origin: *");
 				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 				header("Access-Control-Allow-Headers: Content-Type");
@@ -192,6 +193,7 @@
 					$stmt = $pdo->prepare("SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ");
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
+					echo "result> $result";
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
 					if ($result) {
 						$c = $result['count(*)']; // Stocke le pseudo récupéré
