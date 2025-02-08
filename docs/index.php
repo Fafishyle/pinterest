@@ -73,19 +73,7 @@
 				}
 				$affichage1 = $adm.$_SESSION['logged'];
 				//l'email de la session en cours
-				$email = $affichage1;
-				/*
-				$stmt = $pdo->prepare("SELECT pseudo FROM users WHERE email = :email");
-				$stmt->execute(['email' => $email]);
-				$result = $stmt->fetch(PDO::FETCH_ASSOC);
-				if ($result) {
-					$pseudo = $result['pseudo']; // Stocke le pseudo récupéré
-					$affichage1 = $pseudo;
-				} else {
-					$pseudo = "Pseudo introuvable"; // Gère le cas où l'email n'existe pas
-					$affichage1 = "Pas de pseudo";
-				}
-					*/
+				$affichage1 = find_pseudo($affichage1);
 				$ref="";
 				$co="Déconnexion";
 				$ref1="href = 'deconnexion.php' ";
@@ -131,7 +119,49 @@
         
         <div id=image>
         <?php	
+			function find_pseudo($email){
+				header("Access-Control-Allow-Origin: *");
+				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+				header("Access-Control-Allow-Headers: Content-Type");
+				if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+					http_response_code(200);
+					exit;
+				}
 
+				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+				$DATABASE_URL = getenv('DATABASE_URL');
+
+				if (!$DATABASE_URL) {
+					die(json_encode(["error" => "DATABASE_URL non définie."]));
+				}
+
+				// Décomposer l'URL en ses parties
+				$parts = parse_url($DATABASE_URL);
+				$host = $parts["host"];
+				$user = $parts["user"];
+				$pass = $parts["pass"];
+				$port = $parts["port"];
+				$dbname = ltrim($parts["path"], "/");
+				try {
+						// Connexion à PostgreSQL
+						$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+							PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+						]);
+						$stmt = $pdo->prepare("SELECT pseudo FROM users WHERE email = :email");
+						$stmt->execute(['email' => $email]);
+						$result = $stmt->fetch(PDO::FETCH_ASSOC);
+						if ($result) {
+							$pseudo = $result['pseudo']; // Stocke le pseudo récupéré
+							$affichage1 = $pseudo;
+						} else {
+							$pseudo = "Pseudo introuvable"; // Gère le cas où l'email n'existe pas
+							$affichage1 = "Pas de pseudo";
+						}
+					} catch (PDOException $e) {
+						http_response_code(500);
+						echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+					}
+			}
 
 			function affic_cat($cate)
 			{
