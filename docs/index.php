@@ -162,7 +162,6 @@
 
 			function affic_cat($cate)
 			{
-				echo "categorie> $cate";
 				header("Access-Control-Allow-Origin: *");
 				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 				header("Access-Control-Allow-Headers: Content-Type");
@@ -185,6 +184,24 @@
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
 
+				var_dump($cate);
+				die();
+
+				try {
+					$stmt = $pdo->prepare('SELECT count(*) as total FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate');
+					$stmt->execute(['cate' => $cate]);
+					$result = $stmt->fetch(PDO::FETCH_ASSOC);
+				
+					if (!$result) {
+						die(json_encode(["error" => "Aucune donnée trouvée pour $cate"]));
+					}
+				
+					$c = $result['total']; // Correction ici (éviter 'count(*)' directement)
+					echo "Nombre d'éléments: $c";
+				} catch (PDOException $e) {
+					die(json_encode(["error" => "Erreur SQL: " . $e->getMessage()]));
+				}
+				
 				try {
 					// Connexion à PostgreSQL
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
