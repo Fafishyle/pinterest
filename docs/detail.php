@@ -232,7 +232,7 @@
 						echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
 					}  			
 			}
-            affic_cat("voiture");
+            affic_cat("nourriture");
         ?> 
 
 
