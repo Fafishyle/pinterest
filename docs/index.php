@@ -55,6 +55,7 @@
 			$affichage1 = "Inscription";
 			$ref="href = 'inscription.html' ";
 			$targ="'_blank'"; //pour afficher dans un nouvel onglet
+			//Si la session est connectée
 			if (isset($_SESSION['logged']))
 			{
 				$temp=time();
@@ -71,6 +72,18 @@
 
 				}
 				$affichage1 = $adm.$_SESSION['logged'];
+				//l'email de la session en cours
+				$email = $affichage1;
+				$stmt = $pdo->prepare("SELECT pseudo FROM users WHERE email = :email");
+				$stmt->execute(['email' => $email]);
+				$result = $stmt->fetch(PDO::FETCH_ASSOC);
+				if ($result) {
+					$pseudo = $result['pseudo']; // Stocke le pseudo récupéré
+					$affichage1 = $pseudo;
+				} else {
+					$pseudo = "Pseudo introuvable"; // Gère le cas où l'email n'existe pas
+					$affichage1 = "Pas de pseudo";
+				}
 				$ref="";
 				$co="Déconnexion";
 				$ref1="href = 'deconnexion.php' ";
