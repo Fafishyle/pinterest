@@ -47,33 +47,8 @@
     <BODY>
 		<div class=pull-right>
 			<?php
-			header('Content-Type: application/json');
-			header("Access-Control-Allow-Origin: *");
-			header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-			header("Access-Control-Allow-Headers: Content-Type");
-			if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-				http_response_code(200);
-				exit;
-			}
-			
-			// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
-			$DATABASE_URL = getenv('DATABASE_URL');
-			
-			if (!$DATABASE_URL) {
-				die(json_encode(["error" => "DATABASE_URL non définie."]));
-			}
-			
-			// Décomposer l'URL en ses parties
-			$parts = parse_url($DATABASE_URL);
-			$host = $parts["host"];
-			$user = $parts["user"];
-			$pass = $parts["pass"];
-			$port = $parts["port"];
-			$dbname = ltrim($parts["path"], "/");
 
-			try{
-
-				//Si quelqu'un s'est connecté, si une session démarre
+			//Si quelqu'un s'est connecté, si une session démarre
 			//Si $_SESSION a une valeur
 			$co= "Connexion";
 			$ref1="href= 'connexion.html' ";
@@ -99,6 +74,7 @@
 				$affichage1 = $adm.$_SESSION['logged'];
 				//l'email de la session en cours
 				$email = $affichage1;
+				/*
 				$stmt = $pdo->prepare("SELECT pseudo FROM users WHERE email = :email");
 				$stmt->execute(['email' => $email]);
 				$result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -109,6 +85,7 @@
 					$pseudo = "Pseudo introuvable"; // Gère le cas où l'email n'existe pas
 					$affichage1 = "Pas de pseudo";
 				}
+					*/
 				$ref="";
 				$co="Déconnexion";
 				$ref1="href = 'deconnexion.php' ";
@@ -121,12 +98,6 @@
 			</a>";
 				
 			}
-
-			} catch (PDOException $e) {
-				http_response_code(500);
-				echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
-			}
-			
 			echo "
 				<a class='button_red' style=' background-color: #FFA07A;' $ref1 target=$targ >
 				<strong>$co </strong> 
