@@ -72,7 +72,7 @@ try {
     } else {
         // Insertion de l'utilisateur dans la base de données
         $stmt = $pdo->prepare("INSERT INTO users (pseudo, email, password) VALUES (:pseudo, :email, :password)");
-        $stmt->execute(['email' => $email, 'password' => $hashedPassword]);
+        $stmt->execute(['pseudo' => $pseudo, 'email' => $email, 'password' => $hashedPassword]);
         http_response_code(201);
         echo json_encode(["message" => "Inscription réussie."]);
     }
