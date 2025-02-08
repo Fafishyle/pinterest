@@ -110,7 +110,7 @@
                     return null;
                 }  
             }
-            $res= recup_info()['nomFich'];
+            $res= recup_info()['nomfich'];
             echo " <img src='data/". $res ."' importance='auto' alt=''>";
         ?>
         <table>
@@ -136,14 +136,14 @@
                 <tr>
                     <td><B>Nom du fichier</B></td>
                     <?php
-                        $inf=recup_info()['nomFich'];
+                        $inf=recup_info()['nomfich'];
                         echo "<td>$inf</td>";
                     ?>                  
                 </tr>
                 <tr>
                     <td><B>Catégorie</B></td>
                         <?php
-                            $inf=recup_info()['nomCat'];
+                            $inf=recup_info()['nomcat'];
                             echo "<td> <a href='index.php?n_cat=".$inf."'> $inf </a> </td>";
                         ?>
                 </tr>
