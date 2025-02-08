@@ -71,9 +71,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     console.log("Connexion détectée")
     const courriel = document.getElementById('email').value;
     const password = document.getElementById('pass').value;
-    const pseudo = document.getElementById('pseudo').value;
     console.log("Données envoyées au serveur:", JSON.stringify({ 
-        pseudo: pseudo,
         email: courriel,
         password: password
     }));   
@@ -83,7 +81,6 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-            pseudo: pseudo,
             email: courriel,
             password: password
         })
@@ -92,7 +89,6 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
         if (!response.ok) {
             //throw new Error('Erreur réseau');
         }
-        console.log("script.js reponse json > " + response.json());
         return response.json();
     })
     .then(data => {

@@ -36,10 +36,9 @@ try {
 
 
     // Vérification des champs
-    if (!isset($data['pseudo']) || !isset($data['email']) || !isset($data['password'])) {
+    if (!isset($data['email']) || !isset($data['password'])) {
         http_response_code(400);
         echo json_encode([
-            "pseudo" => isset($data['pseudo']) ? $data['pseudo'] : null,
             "error" => "Données manquantes dans la requête",
             "email" => isset($data['email']) ? $data['email'] : null,
             "password" => isset($data['password']) ? 'Donnée' : 'Non donnée'
@@ -47,7 +46,6 @@ try {
         exit;
     }
     
-    $pseudo = $data['pseudo'];
     $email = $data['email'];
     $password = $data['password'];
 
