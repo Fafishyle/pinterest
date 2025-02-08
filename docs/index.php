@@ -219,7 +219,7 @@
 						}
 						//afficher l'image
 						echo "
-						<a href='detail.html?idphoto=". $info1 ."&idcat=". $info2 ."'>
+						<a href='detail.php?idphoto=". $info1 ."&idcat=". $info2 ."'>
 							<img src='data/". $res ."' importance='auto' alt=''>
 						</a>";
 						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
