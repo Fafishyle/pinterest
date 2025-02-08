@@ -190,7 +190,7 @@
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
-					$stmt = $pdo->prepare("SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ");
+					$stmt = $pdo->prepare('SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ');
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
 					$c = $result['count(*)'];
