@@ -73,7 +73,7 @@
 				}
 				$affichage1 = $adm.$_SESSION['logged'];
 				//l'email de la session en cours
-				$affichage1 = find_pseudo($affichage1);
+				find_pseudo($affichage1);
 				$ref="";
 				$co="Déconnexion";
 				$ref1="href = 'deconnexion.php' ";
@@ -127,7 +127,6 @@
 					http_response_code(200);
 					exit;
 				}
-
 				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
 				$DATABASE_URL = getenv('DATABASE_URL');
 
