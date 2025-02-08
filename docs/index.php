@@ -299,7 +299,7 @@
 				$selected = $_POST['Cat'];
 				echo '<br><h4> => Voici les photos correspendants à la catégoriee <span class="titre">' . $selected . '</span></h4>';
 				echo '<br>';
-				affic_cat($_POST['Cat']);
+				affic_cat($selected);
 				
 				
 			}
@@ -314,7 +314,7 @@
 				echo '<br>';
 				if ($_POST['Cat']!=="Toutes les photos")
 				{
-					affic_cat($_POST['Cat']);
+					affic_cat($selected);
 				}
 				
 			}				
