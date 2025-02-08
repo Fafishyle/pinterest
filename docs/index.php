@@ -269,7 +269,7 @@
 					]);
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
 					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p');
-					//$stmt->execute(['cate' => $cate]);
+					$stmt->execute([]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
 					$c= $result['total'];
 					echo "<h1>Accueil</h1>";
@@ -278,7 +278,7 @@
 					//</div>";
 					//ICI, il recupere le nom des fichiers selon la catégorie
 					$stmt = $pdo->prepare('SELECT nomFich,photoId,catId FROM categorie NATURAL JOIN photo');
-					//$stmt->execute(['cate' => $cate]);
+					$stmt->execute([]);
 					//resultat de la requête avec fetch va chercher le premier res[attribut].
 					while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
 					{
