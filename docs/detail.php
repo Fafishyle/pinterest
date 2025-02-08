@@ -52,7 +52,7 @@
         <?php 
             if (isset($_SESSION['logged']))
             {
-                echo"Connecté: " . $_SESSION['logged'] ."<br>";
+                echo "Connecté: " . $_SESSION['logged'] ."<br>";
             }
 		if(isset($_SESSION['debut']))
 			{	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
@@ -61,8 +61,8 @@
 		?>
         <div>
         <a href="index.php" > 
-            <h5><span class="titre">◄ |M.P.|</span></h5>
-            <span class="alert"> retour à l'accueil</span>
+            <h5><span class="titre">◄ |Accueil|</span></h5>
+            <!--span class="alert"> retour à l'accueil-->
         </a>
         </div>
 
@@ -70,13 +70,45 @@
             
             function recup_info()
             {
-                $projet = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
+                header("Access-Control-Allow-Origin: *");
+				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+				header("Access-Control-Allow-Headers: Content-Type");
+				if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+					http_response_code(200);
+					exit;
+				}
+				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+				$DATABASE_URL = getenv('DATABASE_URL');
 
-                //récupère la valeur envoyé par l'URL
-                $recup= $_GET['idphoto'];
-                $req = $projet->query("SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId='". $recup."' ");
-                $resultat = $req->fetch();
-                return $resultat;
+				if (!$DATABASE_URL) {
+					die(json_encode(["error" => "DATABASE_URL non définie."]));
+				}
+
+				// Décomposer l'URL en ses parties
+				$parts = parse_url($DATABASE_URL);
+				$host = $parts["host"];
+				$user = $parts["user"];
+				$pass = $parts["pass"];
+				$port = $parts["port"];
+				$dbname = ltrim($parts["path"], "/");
+				try {
+                    //$projet = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
+                    $projet = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+					]);
+                    //récupère la valeur envoyé par l'URL
+                    $recup= $_GET['idphoto'];
+                    //$req = $projet->query("SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId='". $recup."' ");
+                    $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
+                    $req->execute(['recup' => $recup]);
+                    //$resultat = $req->fetch();
+                    $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+                    return $resultat;
+                } catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+                    return null;
+                }  
             }
             $res= recup_info()['nomFich'];
             echo " <img src='data/". $res ."' importance='auto' alt=''>";
