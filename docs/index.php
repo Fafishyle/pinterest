@@ -204,16 +204,13 @@
 					}
 					
 					//ICI, il recupere le nom des fichiers selon la catégorie
-					$stmt = $pdo->prepare('SELECT p.nomFich,p.photoId,p.catId FROM categorie c NATURAL JOIN photo p  WHERE nomCat ILIKE :cate');
+					$stmt = $pdo->prepare('SELECT nomFich,photoId,catId FROM categorie NATURAL JOIN photo WHERE nomCat ILIKE :cate');
 					$stmt->execute(['cate' => $cate]);
 						//resultat de la requête avec fetch va chercher le premier res[attribut].
-						echo "avant";
 						while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
 					{
-						echo "apres";
-						echo $resultat['nomFich'];
 						$res= $resultat['nomFich'];
-
+						echo 'fichier >$res';
 						//on va envoyer le photoId et le catID
 						$info1=$resultat['photoId'];
 						$info2=$resultat['catId'];
