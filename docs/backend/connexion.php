@@ -52,12 +52,12 @@ try {
 
 
     // Requête sécurisée avec un paramètre préparé
-    $stmt = $pdo->prepare("SELECT * FROM validation WHERE pseudo = :email");
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->execute(['email' => $email]);
     $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // Vérification du mot de passe
-    if ($resultat && password_verify($password, $resultat['passe'])) {
+    if ($resultat && password_verify($password, $resultat['password'])) {
         session_start();
         $_SESSION['logged'] = $email;
         $_SESSION['admin'] = $resultat['admin'];
