@@ -66,7 +66,7 @@
 				{
 					$adm="COMPTE ADMINISTRATEUR: ";
 					echo "
-				<a class='button_red' style=' background-color: #FFA07A;' href='statistic.html' >
+				<a class='button_red' style=' background-color: #FFA07A;' href='statistic.php' >
 				<strong>Statistique </strong>
 			</a>";
 
@@ -288,7 +288,7 @@
 							echo"<div>"; //pour l'affichage du bouton sur la même ligne
 						}
 						echo "
-						<a href='detail.html?idphoto=". $info1 ."&idcat=". $info2 ."'>
+						<a href='detail.php?idphoto=". $info1 ."&idcat=". $info2 ."'>
 							<img src='data/". $res ."' importance='auto' alt=''>
 						</a>
 						
