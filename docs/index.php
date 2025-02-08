@@ -192,11 +192,9 @@
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
 					var_dump($result); // Vérifie ce que contient réellement le tableau
-					$c = $result['total'];
-					echo "result> $c";
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
 					if ($result) {
-						$c = $result['count(*)']; // Stocke le pseudo récupéré
+						$c = $result['total']; // Stocke le pseudo récupéré
 						echo "<div class='alert'>
 							Nous vous avons selectionnés | $c | photos. <br>
 						</div>";
