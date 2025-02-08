@@ -188,11 +188,10 @@
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
-					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ');
+					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p WHERE nomCat ILIKE :cate ');
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					var_dump($result); // Vérifie ce que contient réellement le tableau
-					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
+					//Recupere le nombre de fichiers en tout selon la catégorie
 					if ($result) {
 						$c = $result['total']; // Stocke le pseudo récupéré
 						echo "<div class='alert'>
@@ -200,7 +199,7 @@
 						</div>";
 					} else {
 						echo "<div class='alert'>
-							Aucune photo trouvée <br>
+							Aucune photo trouvée pour cette catégorie <br>
 						</div>";
 					}
 					
