@@ -278,7 +278,7 @@
 					//</div>";
 					//ICI, il recupere le nom des fichiers selon la catégorie
 					$stmt = $pdo->prepare('SELECT nomFich,photoId,catId FROM categorie NATURAL JOIN photo');
-					$stmt->execute(['cate' => $cate]);
+					//$stmt->execute(['cate' => $cate]);
 					//resultat de la requête avec fetch va chercher le premier res[attribut].
 					while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
 					{
