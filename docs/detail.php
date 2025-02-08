@@ -188,8 +188,9 @@
 					//Recupere le nombre de fichiers en tout selon la catégorie
 					if ($result) {
 						$c = $result['total']; // Stocke le pseudo récupéré
-						echo "<div class='alert'>
-							Nous vous avons selectionnés | $c | photos. <br>
+						echo "<br>
+                        <div class='alert'>
+							Explorez dans la même catégorie.<br>
 						</div>";
 					} else {
 						echo "<div class='alert'>
@@ -232,7 +233,10 @@
 						echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
 					}  			
 			}
-            affic_cat("nourriture");
+
+            // Afficher les images 
+            $inf=recup_info()['nomcat'];
+            affic_cat($inf);
         ?> 
 
 
