@@ -183,34 +183,16 @@
 				$pass = $parts["pass"];
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
-
-				var_dump($cate);
-				die();
-
-				try {
-					$stmt = $pdo->prepare('SELECT count(*) as total FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate');
-					$stmt->execute(['cate' => $cate]);
-					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-				
-					if (!$result) {
-						die(json_encode(["error" => "Aucune donnée trouvée pour $cate"]));
-					}
-				
-					$c = $result['total']; // Correction ici (éviter 'count(*)' directement)
-					echo "Nombre d'éléments: $c";
-				} catch (PDOException $e) {
-					die(json_encode(["error" => "Erreur SQL: " . $e->getMessage()]));
-				}
-				
 				try {
 					// Connexion à PostgreSQL
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
-					$stmt = $pdo->prepare('SELECT count(*) FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ');
+					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p WHERE nomCat = :cate ');
 					$stmt->execute(['cate' => $cate]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
-					$c = $result['count(*)'];
+					var_dump($result); // Vérifie ce que contient réellement le tableau
+					$c = $result['total'];
 					echo "result> $c";
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
 					if ($result) {
