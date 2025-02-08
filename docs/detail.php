@@ -103,6 +103,8 @@
                     $req->execute(['recup' => $recup]);
                     //$resultat = $req->fetch();
                     $resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+                    var_dump($resultat);
+                    echo 'resultat> $resultat';
                     return $resultat;
                 } catch (PDOException $e) {
                     http_response_code(500);
