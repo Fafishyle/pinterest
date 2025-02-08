@@ -71,9 +71,8 @@
 			</a>";
 
 				}
-				$affichage1 = $adm.$_SESSION['logged'];
 				//l'email de la session en cours
-				find_pseudo($affichage1);
+				$affichage1 = $adm.$_SESSION['logged'];
 				$ref="";
 				$co="Déconnexion";
 				$ref1="href = 'deconnexion.php' ";
@@ -90,7 +89,7 @@
 				<a class='button_red' style=' background-color: #FFA07A;' $ref1 target=$targ >
 				<strong>$co </strong> 
 			</a>";
-
+			find_pseudo($affichage1);
 				echo " 			
 			<a class='button_red ' style=' background-color:#F08080;' $ref target='_blank' >
 				<strong><i>$affichage1</i></strong>
