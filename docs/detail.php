@@ -60,7 +60,7 @@
 			}
 		?>
         <div>
-        <a href="index.html" > 
+        <a href="index.php" > 
             <h5><span class="titre">◄ |M.P.|</span></h5>
             <span class="alert"> retour à l'accueil</span>
         </a>
@@ -112,7 +112,7 @@
                     <td><B>Catégorie</B></td>
                         <?php
                             $inf=recup_info()['nomCat'];
-                            echo "<td> <a href='index.html?n_cat=".$inf."'> $inf </a> </td>";
+                            echo "<td> <a href='index.php?n_cat=".$inf."'> $inf </a> </td>";
                         ?>
                 </tr>
             </tbody>
