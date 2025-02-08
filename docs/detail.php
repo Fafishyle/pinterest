@@ -92,14 +92,9 @@
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
 				try {
-                    //$projet = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
-                    $projet = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
-						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-					]);
                     //récupère la valeur envoyé par l'URL
                     $recup= $_GET['idphoto'];
-                    echo "recup > $recup";
-
+                    //echo "recup > $recup";
                     // Connexion à PostgreSQL
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -112,8 +107,8 @@
                     $req->execute(['recup' => $recup]);
                     //$resultat = $req->fetch();
                     $resultat = $req->fetch(PDO::FETCH_ASSOC);
-                    echo "resultat> $resultat";
-                    var_dump($resultat);
+                    //echo "resultat> $resultat";
+                    //var_dump($resultat);
                     
                     return $resultat;
                 } catch (PDOException $e) {
