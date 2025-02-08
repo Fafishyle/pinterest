@@ -99,6 +99,25 @@
                     //récupère la valeur envoyé par l'URL
                     $recup= $_GET['idphoto'];
                     echo "recup > $recup";
+
+                    // Connexion à PostgreSQL
+					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+					]);
+					$stmt = $pdo->prepare('SELECT count(*) AS total FROM categorie c NATURAL JOIN photo p WHERE nomCat ILIKE :cate ');
+					$stmt->execute(['cate' => $cate]);
+					$result = $stmt->fetch(PDO::FETCH_ASSOC);
+					//Recupere le nombre de fichiers en tout selon la catégorie
+					if ($result) {
+						$c = $result['total']; // Stocke le pseudo récupéré
+						echo "<div class='alert'>
+							Nous vous avons selectionnés | $c | photos. <br>
+						</div>";
+					} else {
+						echo "<div class='alert'>
+							Aucune photo trouvée pour cette catégorie <br>
+						</div>";
+					}
                     //$req = $projet->query("SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId='". $recup."' ");
                     $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
                     $req->execute(['recup' => $recup]);
