@@ -98,6 +98,7 @@
 					]);
                     //récupère la valeur envoyé par l'URL
                     $recup= $_GET['idphoto'];
+                    echo 'recup > $recup';
                     //$req = $projet->query("SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId='". $recup."' ");
                     $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
                     $req->execute(['recup' => $recup]);
