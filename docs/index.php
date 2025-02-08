@@ -210,7 +210,7 @@
 						while ($resultat = $stmt->fetch(PDO::FETCH_ASSOC) )
 					{
 						$res= $resultat['nomFich'];
-						echo "fichier >$res";
+						echo "fichier >$resultat";
 						//on va envoyer le photoId et le catID
 						$info1=$resultat['photoId'];
 						$info2=$resultat['catId'];
