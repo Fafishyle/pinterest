@@ -19,8 +19,8 @@
 			width:25%;
 			height:50%;
 			object-position: 10px center; ;	  
-			margin-right: 2em;
-            margin-top: 2em;
+			margin-right: 3em;
+            margin-top: 0em;
 			border: 50 px;
 			border-radius: 20px;
             float:left;
