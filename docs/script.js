@@ -32,7 +32,13 @@ document.addEventListener("DOMContentLoaded", function () {
             if(data.error){
                 showCustomAlert(message, true);
             }else{
+                // Inscription réussie, redirection
                 showCustomAlert(message, false);
+                // Supprimer l'alerte
+                setTimeout(() => {
+                    alertBox.remove();
+                    window.location.href = 'index.php'; // Redirection après fermeture
+                }, 5000);
             }
             
         })
