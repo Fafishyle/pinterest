@@ -272,7 +272,7 @@
 					$stmt->execute([]);
 					$result = $stmt->fetch(PDO::FETCH_ASSOC);
 					$c= $result['total'];
-					echo "<h1>Accueil</h1>";
+					echo "<span class='titre'>Accueil</span>";
 					//ICI, il recupere le nom des fichiers selon la catégorie
 					$stmt = $pdo->prepare('SELECT nomFich,photoId,catId FROM categorie NATURAL JOIN photo');
 					$stmt->execute([]);

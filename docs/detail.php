@@ -113,7 +113,7 @@
                 }  
             }
             $res= recup_info()['nomfich'];
-            echo " <img src='data/". $res ."' importance='auto' alt=''>";
+            echo " <div> <img src='data/". $res ."' importance='auto' alt=''>";
         ?>
         <table>
             <thead>
@@ -152,6 +152,7 @@
             </tbody>
             
         </table>
+		<div>
         <?php
         
         function affic_cat($cate)
