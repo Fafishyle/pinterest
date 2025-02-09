@@ -82,7 +82,6 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
             showCustomAlert('Connexion réussie !', false);
             // Supprimer l'alerte
             setTimeout(() => {
-                alertBox.remove();
                 window.location.href = 'index.php'; // Redirection après fermeture
             }, 5000);
         } else {
