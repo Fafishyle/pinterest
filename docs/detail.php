@@ -42,10 +42,10 @@
             }
 
 			.window{
-				padding: 20px;
+				padding: 43px;
 			background-color: #D8BFD8; 
 			color: #8A2BE2;
-			margin-bottom: 15px;
+			margin-bottom: 1px;
 			}
 
 
