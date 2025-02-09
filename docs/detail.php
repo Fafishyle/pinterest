@@ -41,6 +41,13 @@
             text-align:center;
             }
 
+			.window{
+				padding: 20px;
+			background-color: #D8BFD8; 
+			color: #8A2BE2;
+			margin-bottom: 15px;
+			}
+
 
         </style>
 		<meta charset="utf-8" />
@@ -113,7 +120,7 @@
                 }  
             }
             $res= recup_info()['nomfich'];
-            echo " <div> <img src='data/". $res ."' importance='auto' alt=''>";
+            echo " <div class='window'> <img src='data/". $res ."' importance='auto' alt=''>";
         ?>
         <table>
             <thead>
