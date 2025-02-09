@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 showCustomAlert(message, false);
                 // Supprimer l'alerte
                 setTimeout(() => {
-                    alertBox.remove();
                     window.location.href = 'index.php'; // Redirection après fermeture
                 }, 5000);
             }
