@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <?php session_start ();?>
-<php>echo "HELOOOOOO";</php>
 <html lang="en-US">
 	<HEAD>
         <style>
@@ -31,7 +30,7 @@
         <?php 
         if (isset($_SESSION['logged']))
         {
-            echo"Connecté: " . $_SESSION['logged'] ."<br>";
+            //echo"Connecté: " . $_SESSION['logged'] ."<br>";
         }
         if(isset($_SESSION['debut']))
         {	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
@@ -40,7 +39,7 @@
     ?>
         
     <div>
-        <a href="index.html" > 
+        <a href="index.php" > 
             <h5><span class="titre">◄ |M.P.|</span></h5>
             <span class="alert"> retour à l'accueil</span>
         </a>
@@ -50,11 +49,11 @@
         
 
 
-            <form action="ajouter.html" method="POST" name="formulaire" enctype="multipart/form-data">
+            <form action="ajouter.php" method="POST" name="formulaire" enctype="multipart/form-data">
     
                 <br/>
               
-                <div class="titre"><h2> Quelle nouvelle photo? </h2></div>
+                <div class="titre"><h2> Ajouter une nouvelle photo </h2></div>
                 
                 <input type="file" name="nomFich" id="nomFich" /><br />
     
@@ -95,14 +94,44 @@
     
                 function recup_id()
             {
-                $bdd = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
-            
-                //récupère la valeur envoyé par l'URL
+                header("Access-Control-Allow-Origin: *");
+				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+				header("Access-Control-Allow-Headers: Content-Type");
+				if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+					http_response_code(200);
+					exit;
+				}
+				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+				$DATABASE_URL = getenv('DATABASE_URL');
+
+				if (!$DATABASE_URL) {
+					die(json_encode(["error" => "DATABASE_URL non définie."]));
+				}
+
+				// Décomposer l'URL en ses parties
+				$parts = parse_url($DATABASE_URL);
+				$host = $parts["host"];
+				$user = $parts["user"];
+				$pass = $parts["pass"];
+				$port = $parts["port"];
+				$dbname = ltrim($parts["path"], "/");
+				try {
+                    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+					]);
+					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
+					$stmt = $pdo->prepare('SELECT photoId FROM photo ORDER BY photoId DESC LIMIT 0, 1');
+					$stmt->execute([]);
+					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+                    //retourne le dernier id
+                    return $resultat['photoId']+1;
+
+                }catch (PDOException $e) {
+					http_response_code(500);
+					echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+                    return null;
+                }  	
                 
-                $req = $bdd->query("SELECT photoId FROM photo ORDER BY photoId DESC LIMIT 0, 1");
-                $resultat = $req->fetch();
-                   
-                return $resultat['photoId']+1;
             }
             
             // Verification du formulaire
@@ -178,14 +207,16 @@
             
                                     echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
                                         Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
-                                        $redirec= "detail.html?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
+                                        $redirec= "detail.php?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
                                        echo " <a href=' ".$redirec." ' >REDIRECTION</a>";
                                                                            
                                 }
                             }
                         }
                     }
-            
+                    
+                    //adapté ici
+                    echo"envoyer photo ici";
                     $servername = 'localhost';
                     $username = 'root';
                     $password = '';
