@@ -27,6 +27,8 @@
         <TITLE  >Ajouter une photo</TITLE>
     </HEAD>
     <BODY>
+        <center><h2 class="titre">MINI-PINTEREST</h2></center>
+        <br>
         <?php 
         if (isset($_SESSION['logged']))
         {
@@ -40,8 +42,7 @@
         
     <div>
         <a href="index.php" > 
-            <h5><span class="titre">◄ |M.P.|</span></h5>
-            <span class="alert"> retour à l'accueil</span>
+            <h5><span class="titre">◄ |Accueil|</span></h5>
         </a>
         </div>
 
@@ -55,7 +56,7 @@
               
                 <div class="titre"><h2> Ajouter une nouvelle photo </h2></div>
                 
-                <input type="file" name="nomFich" id="nomFich" /><br />
+                <input type="file" name="nomfich" id="nomfich" /><br />
     
                 <div style="text-align: left;">
                     <p>
@@ -143,7 +144,7 @@
                 
                     // Erreur quelconque
             
-                    if($_FILES['nomFich']['error'] > 0){
+                    if($_FILES['nomfich']['error'] > 0){
                 
                         echo "Une erreur est survenue lors du transfert: Verifiez que tous les champs sont remplis";
                         die;
@@ -151,7 +152,7 @@
                     
                     // Erreur de la taille
             
-                    $filesize = $_FILES['nomFich']['size'];
+                    $filesize = $_FILES['nomfich']['size'];
                 
                     if ($filesize > $maxsize){
                 
@@ -161,8 +162,8 @@
             
                     //  Erreur du format de la photo
             
-                    $fileName = $_FILES['nomFich']['name'];
-                    $fileExt = "." . strtolower(substr(strrchr($_FILES['nomFich']['name'], '.'), 1));
+                    $fileName = $_FILES['nomfich']['name'];
+                    $fileExt = "." . strtolower(substr(strrchr($_FILES['nomfich']['name'], '.'), 1));
                 
                     if(!in_array($fileExt, $validExt)){
             
@@ -195,7 +196,7 @@
                     if (isset($_POST['submit'])){
             
                         $fileName = "DSC_".recup_id();
-                        $tempName = $_FILES['nomFich']['tmp_name'];
+                        $tempName = $_FILES['nomfich']['tmp_name'];
                         
             
                         if (isset($fileName)){
@@ -224,7 +225,7 @@
                     $pdo = new PDO('mysql:host=localhost;dbname=bdd', $username, $password);
                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             
-                    $pdo->prepare('INSERT INTO photo (nomFich, description, catId) VALUES (?, ?, ?)')
+                    $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
                        ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));
                     
                 

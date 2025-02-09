@@ -82,7 +82,7 @@
 
 				//Boutont ajouter une photo
 				echo "
-				<a class='button_red' style=' background-color: #FFA07A;' href='ajouter.html' >
+				<a class='button_red' style=' background-color: #FFA07A;' href='ajouter.php' >
 				<strong>Ajouter </strong> <i>une photo</i> 
 			</a>";
 				
