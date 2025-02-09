@@ -95,6 +95,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
         console.log("Réponse du serveur:", data);
         if (data.status === 'success') {
             alert('Connexion réussie !');
+            window.location.href = 'index.php';
         } else {
             alert('Erreur: ' + data.error);
         }
