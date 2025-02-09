@@ -54,7 +54,7 @@
 			$ref1="href= 'connexion.html' ";
 			$affichage1 = "Inscription";
 			$ref="href = 'inscription.html' ";
-			$targ="'_blank'"; //pour afficher dans un nouvel onglet
+			$targ="_self"; //pour afficher dans le même onglet
 			//Si la session est connectée
 			if (isset($_SESSION['logged']))
 			{
@@ -89,8 +89,8 @@
 			}
 			echo "
 				<a class='button_red' style=' background-color: #FFA07A;' $ref1 target=$targ >
-				<strong>$co </strong> 
-			</a>";
+					<strong>$co </strong> 
+				</a>";
 				echo " 			
 			<a class='button_red ' style=' background-color:#F08080;' $ref target='_blank' >
 				<strong><i>$affichage1</i></strong>
