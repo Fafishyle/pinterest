@@ -107,11 +107,11 @@ function showCustomAlert(message, error) {
     alertBox.style.padding = '20px';
      // Vérifie le code de statut et applique la couleur correspondante
      if (error) {
-        alertBox.style.backgroundColor = 'red'; // Rouge pour erreur
+        alertBox.style.backgroundColor = '#ff3f3f'; // Rouge pour erreur
     } else {
         alertBox.style.backgroundColor = '#D8BFD8'; // Violet clair
     }
-    alertBox.style.color = '#8A2BE2'; // Bleu-violet
+    alertBox.style.color = 'rgb(89, 12, 162)'; // Bleu-violet
     alertBox.style.marginBottom = '15px';
     alertBox.style.position = 'fixed';
     alertBox.style.top = '20px';
