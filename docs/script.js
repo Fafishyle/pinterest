@@ -96,6 +96,11 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
         if (data.status === 'success') {
             //alert('Connexion réussie !');
             showCustomAlert('Connexion réussie !');
+            // Supprimer l'alerte
+            setTimeout(() => {
+                alertBox.remove();
+                window.location.href = 'index.php'; // Redirection après fermeture
+            }, 5000);
         } else {
             showCustomAlert('Erreur: ' + data.error);
         }
@@ -145,11 +150,5 @@ function showCustomAlert(message) {
 
     alertBox.appendChild(closeButton);
     document.body.appendChild(alertBox);
-
-    // Supprimer l'alerte après 3 secondes
-    setTimeout(() => {
-        alertBox.remove();
-        window.location.href = 'index.php'; // Redirection après fermeture
-    }, 3000);
 }
 

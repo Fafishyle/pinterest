@@ -52,7 +52,7 @@
         <?php 
             if (isset($_SESSION['logged']))
             {
-                echo "Connecté: " . $_SESSION['logged'] ."<br>";
+                //echo "Connecté: " . $_SESSION['logged'] ."<br>";
             }
 		if(isset($_SESSION['debut']))
 			{	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
