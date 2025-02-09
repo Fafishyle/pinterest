@@ -28,38 +28,17 @@ document.addEventListener("DOMContentLoaded", function () {
             return response.json();
         })
         .then(data => {
-            const alertBox = document.createElement('div');
-            alertBox.classList.add('alert'); // Classe CSS pour l'alerte
-            alertBox.textContent = data.message || data.error; // Message d'erreur ou de succès
-
-            // Vérifie le code de statut et applique la couleur correspondante
-            if (data.error) {
-                alertBox.style.backgroundColor = 'red'; // Rouge pour erreur
-                alertBox.style.color = 'white';
-            } else {
-                alertBox.style.backgroundColor = 'green'; // Vert pour succès
-                alertBox.style.color = 'white';
+            const message = data.message || data.error; // Message d'erreur ou de succès
+            if(data.error){
+                showCustomAlert(message, true);
+            }else{
+                showCustomAlert(message, false);
             }
-
-            // Ajoute l'alerte à l'élément body ou à un autre endroit de ton choix
-            document.body.appendChild(alertBox);
-
-            // Masquer l'alerte après 5 secondes
-            setTimeout(() => {
-                alertBox.remove();
-            }, 5000);
+            
         })
         .catch(error => {
-            const alertBox = document.createElement('div');
-            alertBox.classList.add('alert');
-            alertBox.textContent = 'Erreur: ' + error.message;
-            alertBox.style.backgroundColor = 'red'; // Rouge en cas de problème
-            alertBox.style.color = 'white';
-            document.body.appendChild(alertBox);
-            
-            setTimeout(() => {
-                alertBox.remove();
-            }, 5000);
+            const error_message = 'Erreur: ' + error.message;
+            showCustomAlert(error_message, true);
         });
     });
 });
@@ -95,14 +74,14 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
         console.log("Réponse du serveur:", data);
         if (data.status === 'success') {
             //alert('Connexion réussie !');
-            showCustomAlert('Connexion réussie !');
+            showCustomAlert('Connexion réussie !', false);
             // Supprimer l'alerte
             setTimeout(() => {
                 alertBox.remove();
                 window.location.href = 'index.php'; // Redirection après fermeture
             }, 5000);
         } else {
-            showCustomAlert('Erreur: ' + data.error);
+            showCustomAlert('Erreur: ' + data.error, true);
         }
     })
     .catch(error => console.error('Erreur:', error));
@@ -112,7 +91,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
 });
 
 //customiser l'alert
-function showCustomAlert(message) {
+function showCustomAlert(message, error) {
     // Vérifie s'il y a déjà une alerte affichée
     let existingAlert = document.querySelector('.custom-alert');
     if (existingAlert) {
@@ -126,7 +105,12 @@ function showCustomAlert(message) {
 
     // Ajouter le style CSS directement en JS
     alertBox.style.padding = '20px';
-    alertBox.style.backgroundColor = '#D8BFD8'; // Violet clair
+     // Vérifie le code de statut et applique la couleur correspondante
+     if (error) {
+        alertBox.style.backgroundColor = 'red'; // Rouge pour erreur
+    } else {
+        alertBox.style.backgroundColor = '#D8BFD8'; // Violet clair
+    }
     alertBox.style.color = '#8A2BE2'; // Bleu-violet
     alertBox.style.marginBottom = '15px';
     alertBox.style.position = 'fixed';
