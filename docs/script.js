@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Supprimer l'alerte
                 setTimeout(() => {
                     window.location.href = 'index.php'; // Redirection après fermeture
-                }, 5000);
+                }, 2000);
             }
             
         })
@@ -83,7 +83,7 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
             // Supprimer l'alerte
             setTimeout(() => {
                 window.location.href = 'index.php'; // Redirection après fermeture
-            }, 5000);
+            }, 2000);
         } else {
             showCustomAlert('Erreur: ' + data.error, true);
         }
