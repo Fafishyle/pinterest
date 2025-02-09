@@ -48,6 +48,12 @@
 			margin-bottom: 1px;
 			}
 
+			.window img {
+				max-width: 100%; /* L'image ne dépassera pas la largeur du div */
+				height: auto; /* Garde les proportions */
+				display: block; /* Évite l'espace en bas de l'image */
+			}
+
 
         </style>
 		<meta charset="utf-8" />
