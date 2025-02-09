@@ -94,10 +94,10 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     .then(data => {
         console.log("Réponse du serveur:", data);
         if (data.status === 'success') {
-            alert('Connexion réussie !');
-            window.location.href = 'index.php';
+            //alert('Connexion réussie !');
+            showCustomAlert('Connexion réussie !');
         } else {
-            alert('Erreur: ' + data.error);
+            showCustomAlert('Erreur: ' + data.error);
         }
     })
     .catch(error => console.error('Erreur:', error));
@@ -105,3 +105,51 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     console.log("Données envoyées:", JSON.stringify({ email: courriel, password: password }));
     
 });
+
+//customiser l'alert
+function showCustomAlert(message) {
+    // Vérifie s'il y a déjà une alerte affichée
+    let existingAlert = document.querySelector('.custom-alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+
+    // Créer un div pour l'alerte
+    let alertBox = document.createElement('div');
+    alertBox.classList.add('custom-alert');
+    alertBox.innerHTML = `<strong>${message}</strong>`;
+
+    // Ajouter le style CSS directement en JS
+    alertBox.style.padding = '20px';
+    alertBox.style.backgroundColor = '#D8BFD8'; // Violet clair
+    alertBox.style.color = '#8A2BE2'; // Bleu-violet
+    alertBox.style.marginBottom = '15px';
+    alertBox.style.position = 'fixed';
+    alertBox.style.top = '20px';
+    alertBox.style.left = '50%';
+    alertBox.style.transform = 'translateX(-50%)';
+    alertBox.style.border = '2px solid #8A2BE2';
+    alertBox.style.borderRadius = '8px';
+    alertBox.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+    alertBox.style.zIndex = '1000';
+
+    // Ajouter un bouton pour fermer l'alerte
+    let closeButton = document.createElement('span');
+    closeButton.innerHTML = '&times;';
+    closeButton.style.marginLeft = '10px';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.fontWeight = 'bold';
+    closeButton.onclick = function () {
+        alertBox.remove();
+    };
+
+    alertBox.appendChild(closeButton);
+    document.body.appendChild(alertBox);
+
+    // Supprimer l'alerte après 3 secondes
+    setTimeout(() => {
+        alertBox.remove();
+        window.location.href = 'index.php'; // Redirection après fermeture
+    }, 3000);
+}
+
