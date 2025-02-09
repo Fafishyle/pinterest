@@ -152,7 +152,7 @@
             </tbody>
             
         </table>
-		<div>
+		</div>
         <?php
         
         function affic_cat($cate)
