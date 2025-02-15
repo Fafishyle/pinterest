@@ -88,6 +88,9 @@
 
 
                 <?php
+
+                error_reporting(E_ALL);
+                ini_set('display_errors', 1);
     
                 // Lire les données JSON envoyées dans la requête
                 $data = json_decode(file_get_contents("php://input"), true);
@@ -209,25 +212,28 @@
                         die;
                     }
             
-                    $fileName = "DSC_".recup_id();
+                    $newPhotoId = recup_id();
+                    $fileName = "DSC_".$newPhotoId ;
                     echo " <div class='alert'> 
                         tout est ok pour les champs.".$fileName."
                     <br></div>";
 
                     $tempName = $_FILES['nomfich']['tmp_name'];
-                    var_dump($_POST);
-                    echo "$_POST[description]".$_POST['description'];//ici
-        
+                    var_dump($_POST);        
                     if (isset($fileName) && !empty($fileName)){
         
                             $location = "data/";
-                            if (move_uploaded_file($tempName, $location.$fileName.$fileExt)){
-                                //adapté ici
+                            $destination = $location . $fileName . $fileExt;
+                            var_dump($tempName, $destination);
+                            if (move_uploaded_file($tempName, $destination)) {
                                 try {
+                                    $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+                                        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                                    ]);
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                                     $stmt = $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)');
-                                    $stmt->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));    
-                                    echo"envoyer photo ici";
+                                    $stmt->execute(array($fileName.$fileExt, $_POST['description'], $_POST['categorie']));    
+                                    echo "envoyer photo ici";
                                 }catch (PDOException $e) {
                                 http_response_code(500);
                                 echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
@@ -236,9 +242,11 @@
         
                                 echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
                                     Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
-                                    $redirec= "detail.php?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
+                                    $redirec= "detail.php?idphoto=".newPhotoId."&idcat=".$_POST['categorie']." "; 
                                     echo " <a href=' ".$redirec." ' >REDIRECTION</a>";                                             
-                            }
+                                } else {
+                                    echo "Erreur lors du déplacement du fichier.";
+                                }
                     }                 
                 }
             ?>
