@@ -208,7 +208,7 @@
                     <br></div>";
 
                     $tempName = $_FILES['nomfich']['tmp_name'];
-        
+        /*
                     if (isset($fileName) && !empty($fileName)){
         
                             $location = "data/";
@@ -216,7 +216,7 @@
                                 
 
                                 //adapté ici
-                                /*
+                                
                                 try {
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                                     $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
@@ -227,14 +227,14 @@
                                 echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
                                 return null;
                                 } 
-                                */
         
                                 echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
                                     Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
                                     $redirec= "detail.php?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
                                     echo " <a href=' ".$redirec." ' >REDIRECTION</a>";                                             
                             }
-                    }                   
+                    }  
+                    */                 
                 }
             ?>
 
