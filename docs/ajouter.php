@@ -145,7 +145,7 @@
                     // Erreur quelconque
             
                     if($_FILES['nomfich']['error'] > 0){
-                        $_FILES['nomfich']['error'];
+                        echo $_FILES['nomfich']['error'];
                         echo "Une erreur est survenue lors du transfert: Verifiez que tous les champs sont remplis";
                         die;
                     }
