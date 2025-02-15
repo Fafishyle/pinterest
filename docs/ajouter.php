@@ -120,6 +120,7 @@
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
                     //retourne le nouvel id
+                    http_response_code(200);
                     return $resultat['photoId']+1;
 
                 }catch (PDOException $e) {
