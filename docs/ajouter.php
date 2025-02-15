@@ -97,8 +97,6 @@
                 error_log(print_r($data, true));
                 //var_dump($data);
 
-                function recup_id()
-            {
                 header("Access-Control-Allow-Origin: *");
 				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 				header("Access-Control-Allow-Headers: Content-Type");
@@ -120,6 +118,10 @@
 				$pass = $parts["pass"];
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
+                
+                function recup_id()
+            {
+                
 				try {
                     http_response_code(200);
                     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
