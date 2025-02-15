@@ -55,6 +55,7 @@
                 <br/>
               
                 <div class="titre"><h2> Ajouter une nouvelle photo </h2></div>
+                Sélectionner une photo de moins de 100 Ko
                 
                 <input type="file" name="nomfich" id="nomfich" /><br />
     
@@ -138,26 +139,39 @@
             // Verification du formulaire
             
                 if (isset($_POST['submit'])){
-                
-                    $maxsize = 1000000;
+                    //$maxsize = 100000;
                     $validExt = array('.jpg', '.jpeg', '.gif', '.png');
                 
-                    // Erreur quelconque
+                    // Gestion erreur du fichier
             
-                    if($_FILES['nomfich']['error'] > 0){
-                        echo $_FILES['nomfich']['error'];
-                        echo "Une erreur est survenue lors du transfert: Verifiez que tous les champs sont remplis";
-                        die;
-                    }
-                    
-                    // Erreur de la taille
-            
-                    $filesize = $_FILES['nomfich']['size'];
-                
-                    if ($filesize > $maxsize){
-                
-                        echo "Le fichier est trop gros";
-                        die;
+                    if ($_FILES['nomfich']['error'] > 0) {
+                        switch ($_FILES['nomfich']['error']) {
+                            case UPLOAD_ERR_INI_SIZE:
+                                echo "Le fichier dépasse la taille autorisée par le serveur.";
+                                break;
+                            case UPLOAD_ERR_FORM_SIZE:
+                                echo "Le fichier dépasse la taille autorisée par le formulaire.";
+                                break;
+                            case UPLOAD_ERR_PARTIAL:
+                                echo "Le fichier n'a été que partiellement téléchargé.";
+                                break;
+                            case UPLOAD_ERR_NO_FILE:
+                                echo "Aucun fichier n'a été téléchargé.";
+                                break;
+                            case UPLOAD_ERR_NO_TMP_DIR:
+                                echo "Dossier temporaire manquant.";
+                                break;
+                            case UPLOAD_ERR_CANT_WRITE:
+                                echo "Échec de l'écriture du fichier sur le disque.";
+                                break;
+                            case UPLOAD_ERR_EXTENSION:
+                                echo "Une extension PHP a arrêté l'upload du fichier.";
+                                break;
+                            default:
+                                echo "Erreur inconnue.";
+                                break;
+                        }
+                        die; // Arrête le script en cas d'erreur
                     }
             
                     //  Erreur du format de la photo
