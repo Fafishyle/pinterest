@@ -120,8 +120,6 @@
 					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo');
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-                    var_dump($resultat);
-                    echo $resultat['newphotoid'];
                     //retourne le nouvel id
                     return $resultat['newphotoid']+1;
 
@@ -206,6 +204,8 @@
                     }
             
                     $fileName = "DSC_".recup_id();
+                    echo "recup_id()";
+                    echo recup_id();
                     echo " <div class='alert'> 
                         tout est ok pour les champs."+ $fileName +"
                     <br></div>";
