@@ -182,8 +182,9 @@
                     //  Erreur du format de la photo
             
                     $fileName = $_FILES['nomfich']['name'];
+                    echo "$fileName ".$fileName ; //ici
                     $fileExt = "." . strtolower(substr(strrchr($_FILES['nomfich']['name'], '.'), 1));
-                
+                    echo "$fileExt ".$fileExt ; //ici
                     if(!in_array($fileExt, $validExt)){
             
                         echo "<div class='alert'> Le fichier n'est pas une image, vérifiez l'extension!<br>";
@@ -216,15 +217,14 @@
                     <br></div>";
 
                     $tempName = $_FILES['nomfich']['tmp_name'];
+                    echo "$tempName".$tempName ; //ici
+                    echo "$_POST[description]".$_POST['description'];//ici
         
                     if (isset($fileName) && !empty($fileName)){
         
                             $location = "data/";
                             if (move_uploaded_file($tempName, $location.$fileName.$fileExt)){
-                                
-
                                 //adapté ici
-                                
                                 try {
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                                     $stmt = $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)');
