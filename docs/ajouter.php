@@ -78,19 +78,13 @@
         
                     </select>
                 </div>
-                    
-                    <br/>
                     <br/>
     
                 <div style="text-align: left;">
-                    <input type="submit" name="submit" value="Envoyer">
+                    <input type="submit" name="submit" value="Ajouter">
                 </div>
-    
                 </form>
-    
                 <br/>
-                <br/>
-            
                 <?php
     
     
@@ -209,15 +203,20 @@
             
             
                     $fileName = "DSC_".recup_id();
+                    echo " <div class='alert'> 
+                        tout est ok pour les champs."+ $fileName +"
+                    <br></div>";
+
                     $tempName = $_FILES['nomfich']['tmp_name'];
         
                     if (isset($fileName) && !empty($fileName)){
         
                             $location = "data/";
                             if (move_uploaded_file($tempName, $location.$fileName.$fileExt)){
+                                
 
                                 //adapté ici
-
+                                /*
                                 try {
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                                     $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
@@ -228,6 +227,7 @@
                                 echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
                                 return null;
                                 } 
+                                */
         
                                 echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
                                     Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
