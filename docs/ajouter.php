@@ -125,6 +125,7 @@
 
                 }catch (PDOException $e) {
 					http_response_code(500);
+                    echo "error";
 					echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
                     return null;
                 }  	
@@ -202,7 +203,7 @@
                         die;
                     }
             
-            
+                    echo " avant !!!";
                     $fileName = "DSC_".recup_id();
                     echo " <div class='alert'> 
                         tout est ok pour les champs."+ $fileName +"
