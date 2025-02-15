@@ -217,22 +217,19 @@
                     }
                     
                     //adapté ici
-                    echo"envoyer photo ici";
-                    $servername = 'localhost';
-                    $username = 'root';
-                    $password = '';
-            
-                    $pdo = new PDO('mysql:host=localhost;dbname=bdd', $username, $password);
-                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            
-                    $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
-                       ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));
-                    
-                
-                
+
+                    try {
+                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                        $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
+                           ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));    
+                           echo"envoyer photo ici";
+                        }catch (PDOException $e) {
+                        http_response_code(500);
+                        echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+                        return null;
+                    } 
                 }
-                    
-                
+ 
             ?>
 
 
