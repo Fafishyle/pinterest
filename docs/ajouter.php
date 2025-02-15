@@ -50,7 +50,7 @@
         
 
 
-            <form action="ajouter.php" method="POST" name="formulaire" enctype="multipart/form-data">
+            <form id="formAdd" action="ajouter.php" method="POST" name="formulaire" enctype="multipart/form-data">
     
                 <br/>
               
@@ -85,9 +85,15 @@
                 </div>
                 </form>
                 <br/>
+
+
                 <?php
     
-    
+                // Lire les données JSON envoyées dans la requête
+                $data = json_decode(file_get_contents("php://input"), true);
+                error_log(print_r($data, true));
+                //var_dump($data);
+
                 function recup_id()
             {
                 header("Access-Control-Allow-Origin: *");
@@ -116,6 +122,7 @@
                     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
+
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
 					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo');
 					$stmt->execute([]);
@@ -202,10 +209,10 @@
                         echo " <div class='alert'> Vous devez obligatoirement choisir une catégorie!<br></div>";
                         die;
                     }
-            /*
+            
                     $fileName = "DSC_".recup_id();
                     echo " <div class='alert'> 
-                        tout est ok pour les champs."+ $fileName +"
+                        tout est ok pour les champs.".$fileName."
                     <br></div>";
 
                     $tempName = $_FILES['nomfich']['tmp_name'];
@@ -220,8 +227,8 @@
                                 
                                 try {
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                                    $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
-                                    ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));    
+                                    $stmt = $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)');
+                                    $stmt->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));    
                                     echo"envoyer photo ici";
                                 }catch (PDOException $e) {
                                 http_response_code(500);
@@ -234,8 +241,7 @@
                                     $redirec= "detail.php?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
                                     echo " <a href=' ".$redirec." ' >REDIRECTION</a>";                                             
                             }
-                    }  
-                    */                 
+                    }                 
                 }
             ?>
 
