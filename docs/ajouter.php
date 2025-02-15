@@ -55,19 +55,19 @@
                 <br/>
               
                 <div class="titre"><h2> Ajouter une nouvelle photo </h2></div>
-                Sélectionner une photo de moins de 100 Ko<br/>
+                Sélectionner une photo de moins de 100 Ko * :<br/>
                 
                 <input type="file" name="nomfich" id="nomfich" /><br />
     
                 <div style="text-align: left;">
                     <p>
-                        <label for="description">Decrire la photo en une phrase: </label><br />
+                        <label for="description">Décrire la photo en une phrase * : </label><br />
                         <textarea name="description" id="description" rows="5" cols="30"></textarea>
                     </p>
                 </div>
     
                 <div style="text-align: left;">
-                    <label for="categorie">Choisir une catégorie: </label><br />
+                    <label for="categorie">Choisissez une catégorie * : </label><br />
     
                     <select name="categorie" id="categorie">
                         <option value="">--Veuillez choisir une catégorie--</option>
@@ -145,6 +145,7 @@
                     // Gestion erreur du fichier
             
                     if ($_FILES['nomfich']['error'] > 0) {
+                        echo "<div class='alert'> ";
                         switch ($_FILES['nomfich']['error']) {
                             case UPLOAD_ERR_INI_SIZE:
                                 echo "Le fichier dépasse la taille autorisée par le serveur.";
@@ -171,6 +172,7 @@
                                 echo "Erreur inconnue.";
                                 break;
                         }
+                        echo "<br></div> ";
                         die; // Arrête le script en cas d'erreur
                     }
             
@@ -181,7 +183,7 @@
                 
                     if(!in_array($fileExt, $validExt)){
             
-                        echo "Le fichier n'est pas une image, vérifiez l'extension!";
+                        echo "<div class='alert'> Le fichier n'est pas une image, vérifiez l'extension!<br>";
                         die;
                     }
             
@@ -191,7 +193,7 @@
                     
                     if($recupDescription == ""){ 
             
-                        echo "La description doit contenir au moins une lettre";
+                        echo "<div class='alert'> La description doit contenir au moins une lettre. <br></div>";
                         die;
                     }
             
@@ -201,49 +203,39 @@
             
                     if($recupCategorie == ""){ 
             
-                        echo "Vous devez obligatoirement choisir une catégorie!";
+                        echo " <div class='alert'> Vous devez obligatoirement choisir une catégorie!<br></div>";
                         die;
                     }
             
-                    
             
-                    if (isset($_POST['submit'])){
-            
-                        $fileName = "DSC_".recup_id();
-                        $tempName = $_FILES['nomfich']['tmp_name'];
-                        
-            
-                        if (isset($fileName)){
-            
-                            if (!empty($fileName)){
-            
-                                $location = "data/";
-                                if (move_uploaded_file($tempName, $location.$fileName.$fileExt)){
-            
-                                    echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
-                                        Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
-                                        $redirec= "detail.php?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
-                                       echo " <a href=' ".$redirec." ' >REDIRECTION</a>";
-                                                                           
-                                }
-                            }
-                        }
-                    }
-                    
-                    //adapté ici
+                    $fileName = "DSC_".recup_id();
+                    $tempName = $_FILES['nomfich']['tmp_name'];
+        
+                    if (isset($fileName) && !empty($fileName)){
+        
+                            $location = "data/";
+                            if (move_uploaded_file($tempName, $location.$fileName.$fileExt)){
 
-                    try {
-                        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                        $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
-                           ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));    
-                           echo"envoyer photo ici";
-                        }catch (PDOException $e) {
-                        http_response_code(500);
-                        echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
-                        return null;
-                    } 
+                                //adapté ici
+
+                                try {
+                                    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                                    $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)')
+                                    ->execute(array("DSC_".recup_id()."$fileExt", $_POST['description'], $_POST['categorie']));    
+                                    echo"envoyer photo ici";
+                                }catch (PDOException $e) {
+                                http_response_code(500);
+                                echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+                                return null;
+                                } 
+        
+                                echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
+                                    Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
+                                    $redirec= "detail.php?idphoto=".recup_id()."&idcat=".$_POST['categorie']." "; 
+                                    echo " <a href=' ".$redirec." ' >REDIRECTION</a>";                                             
+                            }
+                    }                   
                 }
- 
             ?>
 
 
