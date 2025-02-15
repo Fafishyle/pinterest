@@ -202,16 +202,14 @@
                         echo " <div class='alert'> Vous devez obligatoirement choisir une catégorie!<br></div>";
                         die;
                     }
-            
+            /*
                     $fileName = "DSC_".recup_id();
-                    echo "recup_id()";
-                    echo recup_id();
                     echo " <div class='alert'> 
                         tout est ok pour les champs."+ $fileName +"
                     <br></div>";
 
                     $tempName = $_FILES['nomfich']['tmp_name'];
-        /*
+        
                     if (isset($fileName) && !empty($fileName)){
         
                             $location = "data/";
