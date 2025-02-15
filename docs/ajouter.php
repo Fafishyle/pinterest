@@ -121,7 +121,7 @@
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
                     var_dump($resultat);
-                    echo $resultat;
+                    echo $resultat['newphotoid'];
                     //retourne le nouvel id
                     return $resultat['newphotoid']+1;
 
