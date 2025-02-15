@@ -111,6 +111,7 @@
 				$pass = $parts["pass"];
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
+                echo " passé !!!";
 				try {
                     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -203,7 +204,6 @@
                         die;
                     }
             
-                    echo " avant !!!";
                     $fileName = "DSC_".recup_id();
                     echo " <div class='alert'> 
                         tout est ok pour les champs."+ $fileName +"
