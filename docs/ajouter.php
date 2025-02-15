@@ -120,6 +120,7 @@
 					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo');
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
+                    var_dump($resultat);
                     echo $resultat;
                     //retourne le nouvel id
                     return $resultat['newphotoid']+1;
