@@ -97,6 +97,8 @@
                 error_log(print_r($data, true));
                 //var_dump($data);
 
+                function recup_id()
+            {
                 header("Access-Control-Allow-Origin: *");
 				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 				header("Access-Control-Allow-Headers: Content-Type");
@@ -118,10 +120,6 @@
 				$pass = $parts["pass"];
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
-                
-                function recup_id()
-            {
-                
 				try {
                     http_response_code(200);
                     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
@@ -228,6 +226,27 @@
                             $destination = $location . $fileName . $fileExt;
                             var_dump($tempName, $destination);
                             if (move_uploaded_file($tempName, $destination)) {
+                                header("Access-Control-Allow-Origin: *");
+                                header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+                                header("Access-Control-Allow-Headers: Content-Type");
+                                if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                                    http_response_code(200);
+                                    exit;
+                                }
+                                // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+                                $DATABASE_URL = getenv('DATABASE_URL');
+
+                                if (!$DATABASE_URL) {
+                                    die(json_encode(["error" => "DATABASE_URL non définie."]));
+                                }
+
+                                // Décomposer l'URL en ses parties
+                                $parts = parse_url($DATABASE_URL);
+                                $host = $parts["host"];
+                                $user = $parts["user"];
+                                $pass = $parts["pass"];
+                                $port = $parts["port"];
+                                $dbname = ltrim($parts["path"], "/");
                                 try {
                                     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
                                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
