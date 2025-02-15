@@ -112,6 +112,7 @@
 				$port = $parts["port"];
 				$dbname = ltrim($parts["path"], "/");
 				try {
+                    http_response_code(200);
                     $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
@@ -119,9 +120,8 @@
 					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo');
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-                    echo " passé !!!"+ $resultat;
+                    echo $resultat;
                     //retourne le nouvel id
-                    http_response_code(200);
                     return $resultat['newphotoid']+1;
 
                 }catch (PDOException $e) {
