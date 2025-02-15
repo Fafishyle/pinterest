@@ -116,10 +116,10 @@
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
-					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo;');
+					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo');
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-                    echo " passé !!!"+ $resultat['newphotoid'];
+                    echo " passé !!!"+ $resultat;
                     //retourne le nouvel id
                     http_response_code(200);
                     return $resultat['newphotoid']+1;
