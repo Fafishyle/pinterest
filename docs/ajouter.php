@@ -139,13 +139,13 @@
             
                 if (isset($_POST['submit'])){
                 
-                    $maxsize = 100000;
+                    $maxsize = 1000000;
                     $validExt = array('.jpg', '.jpeg', '.gif', '.png');
                 
                     // Erreur quelconque
             
                     if($_FILES['nomfich']['error'] > 0){
-                
+                        $_FILES['nomfich']['error'];
                         echo "Une erreur est survenue lors du transfert: Verifiez que tous les champs sont remplis";
                         die;
                     }
