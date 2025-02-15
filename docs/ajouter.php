@@ -55,7 +55,7 @@
                 <br/>
               
                 <div class="titre"><h2> Ajouter une nouvelle photo </h2></div>
-                Sélectionner une photo de moins de 100 Ko
+                Sélectionner une photo de moins de 100 Ko<br/>
                 
                 <input type="file" name="nomfich" id="nomfich" /><br />
     
@@ -122,10 +122,10 @@
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 					]);
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
-					$stmt = $pdo->prepare('SELECT photoId FROM photo ORDER BY photoId DESC LIMIT 0, 1');
+					$stmt = $pdo->prepare('SELECT count(*) FROM photo;');
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
-                    //retourne le dernier id
+                    //retourne le nouvel id
                     return $resultat['photoId']+1;
 
                 }catch (PDOException $e) {
