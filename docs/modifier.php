@@ -15,7 +15,6 @@
 			color: #8A2BE2;
 			margin-bottom: 15px;
 				}
-            
             img {
 			width:25%;
 			height:50%;
@@ -62,28 +61,50 @@
     ?>
         <div>
         <a href="index.php" > 
-            <h5><span class="titre">◄ |M.P.|</span></h5>
-            <span class="alert"> retour à l'accueil</span>
+            <h5><span class="titre">◄ |Accueil|</span></h5>
         </a>
         </div>
 
         <?php
+            
             //recupere l'information sur le photo
             function recup_info()
             {
-                $projet = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
+                header("Access-Control-Allow-Origin: *");
+                header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+                header("Access-Control-Allow-Headers: Content-Type");
+                if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                    http_response_code(200);
+                    exit;
+                }
+                // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+                $DATABASE_URL = getenv('DATABASE_URL');
 
+                if (!$DATABASE_URL) {
+                    die(json_encode(["error" => "DATABASE_URL non définie."]));
+                }
+
+                // Décomposer l'URL en ses parties
+                $parts = parse_url($DATABASE_URL);
+                $host = $parts["host"];
+                $user = $parts["user"];
+                $pass = $parts["pass"];
+                $port = $parts["port"];
+                $dbname = ltrim($parts["path"], "/");
+                $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                ]);
                 //récupère la valeur envoyé par l'URL
                 $recup= $_GET['idphoto'];
-                $req = $projet->query("SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId='". $recup."' ");
-                $resultat = $req->fetch();
+                $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
+                $req->execute(['recup' => $recup]);
+                $resultat = $req->fetch(PDO::FETCH_ASSOC);
                 return $resultat;
             }
-
             if(isset($_GET['idphoto']))
             {
-            $res= recup_info()['nomFich'];
-            echo " <img src='data/". $res ."' importance='auto' alt=''>";
+                $res= recup_info()['nomfich'];
+                echo " <img src='data/". $res ."' importance='auto' alt=''>";
             }
             $act= "modifier.html?idphoto=".$_GET['idphoto']."&idcat=".$_GET['idcat']."";
         echo " <form action= $act method='POST' name='formulaire' enctype='multipart/form-data'> ";
@@ -128,13 +149,13 @@
                 echo "<tr>
                     <td><B>Nom du fichier</B></td> ";
                    
-                        $inf=recup_info()['nomFich'];
+                        $inf=recup_info()['nomfich'];
                         echo "<td><strong>$inf</strong>";
                         }
                         echo"<div>Modifier la photo: </div><br />";
                         echo "
                         <p>
-                            <input type='file' name='nomFich' id='nomFich' /></div><br />
+                            <input type='file' name='nomfich' id='nomfich' /></div><br />
                         </p>
                     </td>             
                 </tr>";
@@ -178,26 +199,63 @@
         //modifie l'information sur le photo
         function modif_info()
         {
-            $projet = new PDO("mysql:host=localhost; dbname=bdd; charset=utf8", "root", "");
+            header("Access-Control-Allow-Origin: *");
+            header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+            header("Access-Control-Allow-Headers: Content-Type");
+            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                http_response_code(200);
+                exit;
+            }
+            // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+            $DATABASE_URL = getenv('DATABASE_URL');
+
+            if (!$DATABASE_URL) {
+                die(json_encode(["error" => "DATABASE_URL non définie."]));
+            }
+
+            // Décomposer l'URL en ses parties
+            $parts = parse_url($DATABASE_URL);
+            $host = $parts["host"];
+            $user = $parts["user"];
+            $pass = $parts["pass"];
+            $port = $parts["port"];
+            $dbname = ltrim($parts["path"], "/");
+
+            $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ]);
             //récupère la valeur envoyé par l'URL
-            $req = $projet->query("
-            UPDATE `photo` 
-            SET `nomFich` = '".$_FILES['nomFich']['name']."', 
-            `description` = '".$_POST['description']."',
-            `catId`='".$_POST['categorie']."' 
-            WHERE `photoId` = '".$_GET['idphoto']."';
-            ");
-            echo "ENVOIE!";
+            // Vérifie si toutes les données sont bien envoyées
+            if (isset($_FILES['nomfich']['name'], $_POST['description'], $_POST['categorie'], $_GET['idphoto'])) {
+                
+                $req = $pdo->prepare("
+                    UPDATE photo 
+                    SET nomfich = :nomfich, 
+                        description = :description, 
+                        catId = :categorie
+                    WHERE photoid = :idphoto
+                ");
+
+                // Exécution de la requête avec les valeurs sécurisées
+                $req->execute([
+                    'nomfich' => $_FILES['nomfich']['name'],
+                    'description' => $_POST['description'],
+                    'categorie' => $_POST['categorie'],
+                    'idphoto' => $_GET['idphoto']
+                ]);
+
+                // Pas besoin de fetch() ici car UPDATE ne renvoie pas de données
+                echo "Mise à jour réussie !";
+            } else {
+                echo "Erreur : données manquantes.";
+            }
         }
-
-
-
         //pour modifier la photo
 
         if (isset($_POST['submit'])){
             
-            $fileName = $_FILES['nomFich']['name'];
-            $tempName = $_FILES['nomFich']['tmp_name'];
+            $fileName = $_FILES['nomfich']['name'];
+            $tempName = $_FILES['nomfich']['tmp_name'];
             
 
             if (isset($fileName)){

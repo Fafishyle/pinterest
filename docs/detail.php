@@ -75,7 +75,6 @@
         <div>
         <a href="index.php" > 
             <h5><span class="titre">◄ |Accueil|</span></h5>
-            <!--span class="alert"> retour à l'accueil-->
         </a>
         </div>
 
