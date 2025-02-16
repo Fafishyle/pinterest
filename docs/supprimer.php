@@ -1,5 +1,13 @@
 <html>
     La photo va être supprimée... <br>
+    <style> 
+     .alert {
+			padding: 20px;
+			background-color: #D8BFD8; 
+			color: #8A2BE2;
+			margin-bottom: 15px;
+				}
+    </style>
 <?php
             session_start();
             header("Access-Control-Allow-Origin: *");
@@ -57,8 +65,8 @@
             
 ?>
 <div class='alert'>
-    Photo supprimée.
-</div>"
+    Photo supprimée
+</div>
 </html>
 
 <script>
