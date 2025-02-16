@@ -125,11 +125,11 @@
 					]);
 
 					//ICI, il recupere le nombre de fichiers en tout selon la catégorie
-					$stmt = $pdo->prepare('SELECT count(*) AS newphotoid FROM photo');
+					$stmt = $pdo->prepare('SELECT photoid AS lastphotoid FROM photo ORDER BY photoid DESC LIMIT 1');
 					$stmt->execute([]);
 					$resultat = $stmt->fetch(PDO::FETCH_ASSOC);
                     //retourne le nouvel id
-                    return $resultat['newphotoid']+1;
+                    return $resultat['lastphotoid']+1;
 
                 }catch (PDOException $e) {
 					http_response_code(500);
