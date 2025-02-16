@@ -42,12 +42,9 @@
 		</style>
 		<script>
 			document.addEventListener("DOMContentLoaded", function() {
-			const audio = document.getElementById("snd_music");
-			if (localStorage.getItem("musicPlaying") !== "true") {
-				audio.play();
-				localStorage.setItem("musicPlaying", "true"); // Sauvegarde l'état
-			}
-			}, { once: true }); // Exécute le script seulement au premier clic
+				const audio = document.getElementById("snd_music");
+				audio.play(); // Le son est joué à chaque fois que la page est chargée
+			}, { once: true }); // Exécute le script une seule fois lors du chargement initial de la page
 		</script>
 		<meta charset="utf-8" />
         <TITLE  >Mini-Pinterest</TITLE>
