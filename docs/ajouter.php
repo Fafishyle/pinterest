@@ -252,7 +252,7 @@
                                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
                                     ]);
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                                    $stmt = $pdo->prepare('INSERT INTO photo (photoid,nomfich, description, catid) VALUES (?, ?, ?)');
+                                    $stmt = $pdo->prepare('INSERT INTO photo (photoid,nomfich, description, catid) VALUES (?, ?, ?, ?)');
                                     $stmt->execute(array($newPhotoId,$fileName.$fileExt, $_POST['description'], $_POST['categorie']));    
                                     echo "envoyer photo ici";
                                 }catch (PDOException $e) {
