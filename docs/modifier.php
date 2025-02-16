@@ -94,7 +94,6 @@
 				try {
                     //récupère la valeur de l'id envoyé par l'URL
                     $recup= (int) $_GET['idphoto'];
-                    echo "$recup".$recup;
                     // Connexion à PostgreSQL
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
