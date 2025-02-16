@@ -108,13 +108,13 @@
 		?>
 		</div>
 		<center><h2 class="titre">MINI-PINTEREST</h2></center>
+		<audio id='snd_music' src='data/music.mp3' loop></audio>
 		
 		<?php
 		
 		if(isset($_SESSION['debut']))
 			{	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
 				<br>
-				<audio id='snd_music' src='data/music.mp3' loop></audio>
 				";
 			}
 		?>
