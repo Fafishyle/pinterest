@@ -231,16 +231,14 @@
 						<a href='detail.php?idphoto=". $info1 ."&idcat=". $info2 ."'>
 							<img src='data/". $res ."' importance='auto' alt=''>
 						</a>";
-						if(isset($_SESSION['admin']) && $_SESSION['admin']== 1)
-						{ echo "
+						 echo "
 						<a class='button_red' style=' background-color: #FFA07A;' 
-						href='modifier.html?idphoto=". $info1 ."&idcat=". $info2 ."' >
+						href='modifier.php?idphoto=". $info1 ."&idcat=". $info2 ."' >
 							<strong>Modifier </strong> <i>la photo</i> 
 						</a>
 						</div>
-						
 						";
-						}
+			
 					}  
 					} catch (PDOException $e) {
 						http_response_code(500);
