@@ -43,8 +43,8 @@
 		<script>
 			document.addEventListener("DOMContentLoaded", function() {
 				const audio = document.getElementById("snd_music");
-				audio.play(); // Le son est joué à chaque fois que la page est chargée
-			}, { once: true }); // Exécute le script une seule fois lors du chargement initial de la page
+				audio.play(); // Force la lecture de la musique
+			}, { once: true }); // Assurez-vous que le script s'exécute lors du premier chargement
 		</script>
 		<meta charset="utf-8" />
         <TITLE  >Mini-Pinterest</TITLE>
