@@ -54,9 +54,9 @@
                 $req->execute(['idphoto' => $idphoto]);
             
                 if ($req->rowCount() > 0) {
-                    echo json_encode(["success" => "Photo supprimée avec succès."]);
+                    //echo json_encode(["success" => "Photo supprimée avec succès."]);
                 } else {
-                    echo json_encode(["error" => "Aucune photo trouvée avec cet ID."]);
+                    //echo json_encode(["error" => "Aucune photo trouvée avec cet ID."]);
                 }
             } catch (PDOException $e) {
                 http_response_code(500);
@@ -72,5 +72,5 @@
 <script>
 setTimeout(() => {
             window.location.href = 'index.php'; // Redirection après fermeture
-        }, 2000);
+        }, 3000);
 </script>

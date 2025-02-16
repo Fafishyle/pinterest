@@ -205,92 +205,97 @@
         }
         
         //modifie l'information sur le photo
-        function modif_info()
-        {
-            header("Access-Control-Allow-Origin: *");
-            header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-            header("Access-Control-Allow-Headers: Content-Type");
-            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-                http_response_code(200);
-                exit;
-            }
-            // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
-            $DATABASE_URL = getenv('DATABASE_URL');
+        // Fonction pour mettre à jour les informations de la photo
+function modif_info($fileName)
+{
+    // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+    $DATABASE_URL = getenv('DATABASE_URL');
 
-            if (!$DATABASE_URL) {
-                die(json_encode(["error" => "DATABASE_URL non définie."]));
-            }
+    if (!$DATABASE_URL) {
+        die(json_encode(["error" => "DATABASE_URL non définie."]));
+    }
 
-            // Décomposer l'URL en ses parties
-            $parts = parse_url($DATABASE_URL);
-            $host = $parts["host"];
-            $user = $parts["user"];
-            $pass = $parts["pass"];
-            $port = $parts["port"];
-            $dbname = ltrim($parts["path"], "/");
+    // Décomposer l'URL en ses parties
+    $parts = parse_url($DATABASE_URL);
+    $host = $parts["host"];
+    $user = $parts["user"];
+    $pass = $parts["pass"];
+    $port = $parts["port"];
+    $dbname = ltrim($parts["path"], "/");
 
-            $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]);
-            //récupère la valeur envoyé par l'URL
-            // Vérifie si toutes les données sont bien envoyées
-            if (isset($_FILES['nomfich']['name'], $_POST['description'], $_POST['categorie'], $_GET['idphoto'])) {
-                
-                $req = $pdo->prepare("
-                    UPDATE photo 
-                    SET nomfich = :nomfich, 
-                        description = :description, 
-                        catId = :categorie
-                    WHERE photoid = :idphoto
-                ");
+    try {
+        $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ]);
 
-                // Exécution de la requête avec les valeurs sécurisées
-                $req->execute([
-                    'nomfich' => $_FILES['nomfich']['name'],
-                    'description' => $_POST['description'],
-                    'categorie' => $_POST['categorie'],
-                    'idphoto' => $_GET['idphoto']
-                ]);
-
-                // Pas besoin de fetch() ici car UPDATE ne renvoie pas de données
-                echo "Mise à jour réussie !";
-            } else {
-                echo "Erreur : données manquantes.";
-            }
+        // Vérifier que les valeurs nécessaires existent
+        if (!isset($_POST['description'], $_POST['categorie'], $_GET['idphoto'])) {
+            die(json_encode(["error" => "Données manquantes."]));
         }
-        //pour modifier la photo
 
-        if (isset($_POST['submit'])){
-            
-            $fileName = $_FILES['nomfich']['name'];
-            $tempName = $_FILES['nomfich']['tmp_name'];
-            
+        // Assainissement des entrées
+        $idphoto = filter_var($_GET['idphoto'], FILTER_VALIDATE_INT);
+        $description = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
+        $categorie = filter_var($_POST['categorie'], FILTER_VALIDATE_INT);
 
-            if (isset($fileName)){
-
-                if (!empty($fileName)){
-
-                    $location = "data/";
-                    if (move_uploaded_file($tempName, $location.$fileName)){
-
-                        echo "<div class='alert'>Le nouveau fichier a été déplacé dans le répertoire Data<br>
-                            ";
-                            if (isset($_POST['description']) && isset($_POST['categorie']))
-                            {
-                                modif_info();
-                                echo "<header><div class='titre'>LE FICHIER A ETE MODIFIE!</div></header>";
-                            }
-                                                               
-                    }
-                }
-                else{
-                    echo "vous n'avez pas insérer de photo";
-                }
-            }
-            else{
-                echo "vous n'avez pas insérer de photo";
-            }
+        if (!$idphoto || !$categorie) {
+            die(json_encode(["error" => "ID photo ou catégorie invalide."]));
         }
+
+        // Préparation de la requête
+        $req = $pdo->prepare("
+            UPDATE photo 
+            SET nomfich = :nomfich, 
+                description = :description, 
+                catId = :categorie
+            WHERE photoid = :idphoto
+        ");
+
+        // Exécution de la requête avec les valeurs sécurisées
+        $success = $req->execute([
+            'nomfich' => $fileName,
+            'description' => $description,
+            'categorie' => $categorie,
+            'idphoto' => $idphoto
+        ]);
+
+        if ($success) {
+            echo json_encode(["message" => "Mise à jour réussie !"]);
+        } else {
+            echo json_encode(["error" => "Échec de la mise à jour."]);
+        }
+    } catch (PDOException $e) {
+        echo json_encode(["error" => "Erreur de base de données : " . $e->getMessage()]);
+    }
+}
+
+// Vérifier si le formulaire a été soumis
+if (isset($_POST['submit'])) {
+    if (!isset($_FILES['nomfich']) || $_FILES['nomfich']['error'] !== UPLOAD_ERR_OK) {
+        die(json_encode(["error" => "Erreur lors de l'upload du fichier."]));
+    }
+
+    $fileName = $_FILES['nomfich']['name'];
+    $tempName = $_FILES['nomfich']['tmp_name'];
+
+    // Vérification si le fichier est bien présent
+    if (!empty($fileName) && file_exists($tempName)) {
+        $location = "data/";
+
+        if (move_uploaded_file($tempName, $location . $fileName)) {
+            echo json_encode(["message" => "Le fichier a été déplacé dans le répertoire data."]);
+
+            if (isset($_POST['description'], $_POST['categorie'])) {
+                modif_info($fileName);
+                echo json_encode(["message" => "LE FICHIER A ÉTÉ MODIFIÉ !"]);
+            }
+        } else {
+            die(json_encode(["error" => "Échec du déplacement du fichier."]));
+        }
+    } else {
+        die(json_encode(["error" => "Aucun fichier inséré."]));
+    }
+}
         ?>
 
 
