@@ -56,10 +56,13 @@
             }
             
 ?>
-Photo supprimée.
-<div>
-        <a href="index.html" > 
-            <h5><span class="titre">◄ Accueil</span></h5>
-        </a>
-        </div>
+<div class='alert'>
+    Photo supprimée.
+</div>"
 </html>
+
+<script>
+setTimeout(() => {
+            window.location.href = 'index.php'; // Redirection après fermeture
+        }, 2000);
+</script>
