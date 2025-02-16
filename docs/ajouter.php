@@ -252,8 +252,8 @@
                                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
                                     ]);
                                     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-                                    $stmt = $pdo->prepare('INSERT INTO photo (nomfich, description, catid) VALUES (?, ?, ?)');
-                                    $stmt->execute(array($fileName.$fileExt, $_POST['description'], $_POST['categorie']));    
+                                    $stmt = $pdo->prepare('INSERT INTO photo (photoid,nomfich, description, catid) VALUES (?, ?, ?)');
+                                    $stmt->execute(array($newPhotoId,$fileName.$fileExt, $_POST['description'], $_POST['categorie']));    
                                     echo "envoyer photo ici";
                                 }catch (PDOException $e) {
                                 http_response_code(500);
@@ -263,7 +263,7 @@
         
                                 echo "<div class='alert'>Le fichier a été déplacé dans le répertoire Data<br>
                                     Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
-                                    $redirec= "detail.php?idphoto=".newPhotoId."&idcat=".$_POST['categorie']." "; 
+                                    $redirec= "detail.php?idphoto=".$newPhotoId."&idcat=".$_POST['categorie']." "; 
                                     echo " <a href=' ".$redirec." ' >REDIRECTION</a>";                                             
                                 } else {
                                     echo "Erreur lors du déplacement du fichier.";
