@@ -41,15 +41,19 @@
 
 		</style>
 		<script>
-			document.addEventListener("click", function () {
-			const audio = document.getElementById("snd_music");
+			// Vérifier si la session est active et jouer la musique si c'est le cas
+			document.addEventListener("DOMContentLoaded", function() {
+				const audio = document.getElementById("snd_music");
 
-			if (localStorage.getItem("musicPlaying") !== "true") {
-				audio.play();
-				localStorage.setItem("musicPlaying", "true"); // Sauvegarde l'état
-			}
-			}, { once: true }); // Exécute le script seulement au premier clic
+				<?php if (isset($_SESSION['logged'])): ?>
+					if (localStorage.getItem("musicPlaying") !== "true") {
+						audio.play();
+						localStorage.setItem("musicPlaying", "true"); // Sauvegarde l'état pour ne pas relancer
+					}
+				<?php endif; ?>
+			});
 		</script>
+
 		<meta charset="utf-8" />
         <TITLE  >Mini-Pinterest</TITLE>
     </HEAD>
