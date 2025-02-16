@@ -33,7 +33,7 @@
                  ");
             // Exécution de la requête avec les valeurs sécurisées
             $req->execute([
-                'idphoto' => $_GET['idphoto']
+                'idphoto' => (int) $_GET['idphoto']
             ]);
 ?>
 Photo supprimée.
