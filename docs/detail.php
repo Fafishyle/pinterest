@@ -168,10 +168,11 @@
 		
 		<?php
 				echo "
-				<a class='button_red' style=' background-color: #FFA07A;' 
+				<CENTER> <a class='button_red' style=' background-color: #FFA07A;' 
 				href='modifier.php?idphoto=". $info1 ."&idcat=". $info2 ."' >
 					<strong>Modifier la photo </strong> 
 				</a>
+				</CENTER>
 				</div>
 			";
 			?>
