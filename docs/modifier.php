@@ -114,7 +114,7 @@
                 echo " <img src='data/". $res ."' importance='auto' alt=''>";
             }
 
-            $act= "modifier.html?idphoto=".$_GET['idphoto']."&idcat=".$_GET['idcat']."";
+            $act= "modifier.php?idphoto=".$_GET['idphoto']."&idcat=".$_GET['idcat']."";
         echo " <form action= $act method='POST' name='formulaire' enctype='multipart/form-data'> ";
             ?>
         <table>
