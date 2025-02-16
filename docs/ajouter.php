@@ -252,10 +252,8 @@
                                 return null;
                                 } 
         
-                                echo "<div class='alert'>Le fichier a été ajouté.<br>
-                                    Cliquer sur le lien ci-dessous pour être rediriger vers la page de détails de la photo ajoutée.<br></div>";
+                                echo "<div class='alert'>Le fichier a été ajouté.<br></div>";
                                     $redirec= "detail.php?idphoto=".$newPhotoId."&idcat=".$_POST['categorie']." "; 
-                                    //echo " <a href=' ".$redirec." ' >REDIRECTION</a>";
                                     echo "<script>
                                         setTimeout(() => {
                                             window.location.href = '$redirec';
@@ -267,7 +265,6 @@
                     }                 
                 }
             ?>
-
 
     </BODY>  
     </html>

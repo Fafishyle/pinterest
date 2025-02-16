@@ -94,56 +94,6 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     
 });
 
-
-
-//_______________ AJOUTER PHOTO _______________
-document.getElementById('formAdd').addEventListener('submit', function(event) {
-    event.preventDefault();
-    console.log("Ajout photo détectée")
-    const nom = document.getElementById('nomfich').value;
-    const description = document.getElementById('description').value;
-    const categorie = document.getElementById('categorie').value; //id de categorie
-    console.log("Données envoyées au serveur:", JSON.stringify({ 
-        nom: nom,
-        description: description,
-        categorie: categorie
-    }));   
-    fetch('https://pinterest-backend-a55546f8898e.herokuapp.com/backend/ajouter.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-            nom: nom,
-            description: description,
-            categorie: categorie
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            //throw new Error('Erreur réseau');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log("Réponse du serveur:", data);
-        if (data.status === 'success') {
-            //alert('Connexion réussie !');
-            showCustomAlert('Photo ajoutée!', false);
-            // Supprimer l'alerte
-            setTimeout(() => {
-                window.location.href = 'index.php'; // Redirection après fermeture
-            }, 2000);
-        } else {
-            showCustomAlert('Erreur: ' + data.error, true);
-        }
-    })
-    .catch(error => console.error('Erreur:', error));
-    
-    console.log("Données envoyées:", JSON.stringify({ email: courriel, password: password }));
-    
-});
-
 //customiser l'alert
 function showCustomAlert(message, error) {
     // Vérifie s'il y a déjà une alerte affichée
