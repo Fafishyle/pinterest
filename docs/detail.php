@@ -167,6 +167,8 @@
 		
 		<?php
 				if (isset($_SESSION['logged'])){
+					$info1 = $_GET['idphoto'];
+					$info2 = $_GET['idcat'];
 					echo "
 				<CENTER> </br> </br> <a class='button_red' style=' background-color: #FFA07A;' 
 				href='modifier.php?idphoto=". $info1 ."&idcat=". $info2 ."' >
