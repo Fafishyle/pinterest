@@ -168,7 +168,7 @@
 		
 		<?php
 				echo "
-				<CENTER> <a class='button_red' style=' background-color: #FFA07A;' 
+				<CENTER> </br> </br> <a class='button_red' style=' background-color: #FFA07A;' 
 				href='modifier.php?idphoto=". $info1 ."&idcat=". $info2 ."' >
 					<strong>Modifier la photo </strong> 
 				</a>
