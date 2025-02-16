@@ -93,7 +93,8 @@
 				$dbname = ltrim($parts["path"], "/");
 				try {
                     //récupère la valeur de l'id envoyé par l'URL
-                    $recup= $_GET['idphoto'];
+                    $recup= (int) $_GET['idphoto'];
+                    echo "$recup".$recup;
                     // Connexion à PostgreSQL
 					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
 						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
@@ -113,7 +114,7 @@
                 $res= recup_info()['nomfich'];
                 echo " <img src='data/". $res ."' importance='auto' alt=''>";
             }
-            
+
             $act= "modifier.html?idphoto=".$_GET['idphoto']."&idcat=".$_GET['idcat']."";
         echo " <form action= $act method='POST' name='formulaire' enctype='multipart/form-data'> ";
             ?>
