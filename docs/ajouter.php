@@ -95,8 +95,6 @@
                 // Lire les données JSON envoyées dans la requête
                 $data = json_decode(file_get_contents("php://input"), true);
                 error_log(print_r($data, true));
-                //var_dump($data);
-
                 function recup_id()
             {
                 header("Access-Control-Allow-Origin: *");
@@ -185,9 +183,9 @@
                     //  Erreur du format de la photo
             
                     $fileName = $_FILES['nomfich']['name'];
-                    $fileExt = "." . strtolower(substr(strrchr($_FILES['nomfich']['name'], '.'), 1));
+                    $fileExt = "." . strtolower(substr(strrchr($fileName, '.'), 1));
+                    
                     if(!in_array($fileExt, $validExt)){
-            
                         echo "<div class='alert'> Le fichier n'est pas une image, vérifiez l'extension!<br>";
                         die;
                     }
@@ -219,7 +217,6 @@
         
                             $location = "data/";
                             $destination = $location . $fileName . $fileExt;
-                            var_dump($tempName, $destination);
                             if (move_uploaded_file($tempName, $destination)) {
                                 header("Access-Control-Allow-Origin: *");
                                 header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
