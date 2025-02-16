@@ -40,6 +40,16 @@
 			}
 
 		</style>
+		<script>
+			document.addEventListener("click", function () {
+			const audio = document.getElementById("snd_music");
+
+			if (localStorage.getItem("musicPlaying") !== "true") {
+				audio.play();
+				localStorage.setItem("musicPlaying", "true"); // Sauvegarde l'état
+			}
+			}, { once: true }); // Exécute le script seulement au premier clic
+		</script>
 		<meta charset="utf-8" />
         <TITLE  >Mini-Pinterest</TITLE>
     </HEAD>
@@ -99,11 +109,13 @@
 		?>
 		</div>
 		<center><h2 class="titre">MINI-PINTEREST</h2></center>
-		<audio id="snd_music" src="snd00.mp3"></audio>
+
 		<?php
 		if(isset($_SESSION['debut']))
 			{	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
-				<br>";
+				<br>
+				<audio id='snd_music' src='data/music.mp3' loop></audio>
+				";
 			}
 		?>
         Quelles photos souhaitez vous afficher?         

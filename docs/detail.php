@@ -56,6 +56,7 @@
 
 
         </style>
+
 		<meta charset="utf-8" />
         <TITLE  >Detail de Nom_fichier.jpg</TITLE>
     </HEAD>

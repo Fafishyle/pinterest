@@ -94,6 +94,10 @@ document.getElementById('formConnexion').addEventListener('submit', function(eve
     
 });
 
+
+//___________________GESTION DE LA MUSIQUE____
+
+
 //customiser l'alert
 function showCustomAlert(message, error) {
     // Vérifie s'il y a déjà une alerte affichée
