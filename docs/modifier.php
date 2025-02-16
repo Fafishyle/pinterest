@@ -146,7 +146,7 @@
                         }
                         echo "
                         <p>
-                            <label for='description'>Decrire la photo en une phrase: </label><br />
+                            <label for='description'>Decrire la photo en une phrase : </label><br />
                             <textarea name='description' rows='5' cols='30' minlength='1'></textarea>
                         </p>
                     </td>
@@ -228,41 +228,52 @@ function modif_info($fileName)
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
         ]);
 
-        // Vérifier que les valeurs nécessaires existent
-        if (!isset($_POST['description'], $_POST['categorie'], $_GET['idphoto'])) {
-            die(json_encode(["error" => "Données manquantes."]));
+        if (!isset($_GET['idphoto'])) {
+            die(json_encode(["error" => "ID photo manquant."]));
         }
 
-        // Assainissement des entrées
         $idphoto = filter_var($_GET['idphoto'], FILTER_VALIDATE_INT);
-        $description = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
-        $categorie = filter_var($_POST['categorie'], FILTER_VALIDATE_INT);
-
-        if (!$idphoto || !$categorie) {
-            die(json_encode(["error" => "ID photo ou catégorie invalide."]));
+        if (!$idphoto) {
+            die(json_encode(["error" => "ID photo invalide."]));
         }
 
-        // Préparation de la requête
-        $req = $pdo->prepare("
-            UPDATE photo 
-            SET nomfich = :nomfich, 
-                description = :description, 
-                catId = :categorie
-            WHERE photoid = :idphoto
-        ");
+        $updates = [];
+        $params = ["idphoto" => $idphoto];
+        $messages = [];
 
-        // Exécution de la requête avec les valeurs sécurisées
-        $success = $req->execute([
-            'nomfich' => $fileName,
-            'description' => $description,
-            'categorie' => $categorie,
-            'idphoto' => $idphoto
-        ]);
+        if (!empty($_POST['description'])) {
+            $updates[] = "description = :description";
+            $params['description'] = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
+            $messages[] = "La description a été modifiée avec succès.";
+        }
 
-        if ($success) {
-            echo json_encode(["message" => "Mise à jour réussie !"]);
+        if (!empty($_POST['categorie'])) {
+            $categorie = filter_var($_POST['categorie'], FILTER_VALIDATE_INT);
+            if ($categorie) {
+                $updates[] = "catId = :categorie";
+                $params['categorie'] = $categorie;
+                $messages[] = "La catégorie a été modifiée avec succès.";
+            }
+        }
+
+        if ($fileName !== null) {
+            $updates[] = "nomfich = :nomfich";
+            $params['nomfich'] = $fileName;
+            $messages[] = "L'image a été modifiée avec succès.";
+        }
+
+        if (!empty($updates)) {
+            $query = "UPDATE photo SET " . implode(", ", $updates) . " WHERE photoid = :idphoto";
+            $req = $pdo->prepare($query);
+            $success = $req->execute($params);
+
+            if ($success) {
+                echo json_encode(["success" => true, "messages" => $messages]);
+            } else {
+                echo json_encode(["error" => "Échec de la mise à jour."]);
+            }
         } else {
-            echo json_encode(["error" => "Échec de la mise à jour."]);
+            echo json_encode(["message" => "Aucune modification effectuée."]);
         }
     } catch (PDOException $e) {
         echo json_encode(["error" => "Erreur de base de données : " . $e->getMessage()]);
@@ -271,32 +282,28 @@ function modif_info($fileName)
 
 // Vérifier si le formulaire a été soumis
 if (isset($_POST['submit'])) {
-    if (!isset($_FILES['nomfich']) || $_FILES['nomfich']['error'] !== UPLOAD_ERR_OK) {
-        die(json_encode(["error" => "Erreur lors de l'upload du fichier."]));
-    }
+    $fileName = null;
 
-    $fileName = $_FILES['nomfich']['name'];
-    $tempName = $_FILES['nomfich']['tmp_name'];
+    if (isset($_FILES['nomfich']) && $_FILES['nomfich']['error'] === UPLOAD_ERR_OK) {
+        $fileName = $_FILES['nomfich']['name'];
+        $tempName = $_FILES['nomfich']['tmp_name'];
 
-    // Vérification si le fichier est bien présent
-    if (!empty($fileName) && file_exists($tempName)) {
-        $location = "data/";
+        if (!empty($fileName) && file_exists($tempName)) {
+            $location = "data/";
 
-        if (move_uploaded_file($tempName, $location . $fileName)) {
-            echo json_encode(["message" => "Le fichier a été déplacé dans le répertoire data."]);
-
-            if (isset($_POST['description'], $_POST['categorie'])) {
-                modif_info($fileName);
-                echo json_encode(["message" => "LE FICHIER A ÉTÉ MODIFIÉ !"]);
+            if (move_uploaded_file($tempName, $location . $fileName)) {
+                echo json_encode(["message" => "Le fichier a été déplacé dans le répertoire data."]);
+            } else {
+                die(json_encode(["error" => "Échec du déplacement du fichier."]));
             }
         } else {
-            die(json_encode(["error" => "Échec du déplacement du fichier."]));
+            die(json_encode(["error" => "Aucun fichier inséré."]));
         }
-    } else {
-        die(json_encode(["error" => "Aucun fichier inséré."]));
     }
+
+    modif_info($fileName);
 }
-        ?>
+?>
 
 
     </BODY> 

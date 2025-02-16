@@ -99,6 +99,7 @@
 		?>
 		</div>
 		<center><h2 class="titre">MINI-PINTEREST</h2></center>
+		<audio id="snd_music" src="snd00.mp3"></audio>
 		<?php
 		if(isset($_SESSION['debut']))
 			{	echo "Votre temps de connexion: ". time() - $_SESSION['debut']." sec.
