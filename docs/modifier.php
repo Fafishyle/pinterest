@@ -71,41 +71,49 @@
             function recup_info()
             {
                 header("Access-Control-Allow-Origin: *");
-                header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-                header("Access-Control-Allow-Headers: Content-Type");
-                if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-                    http_response_code(200);
-                    exit;
-                }
-                // Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
-                $DATABASE_URL = getenv('DATABASE_URL');
+				header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+				header("Access-Control-Allow-Headers: Content-Type");
+				if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+					http_response_code(200);
+					exit;
+				}
+				// Récupérer l'URL de la base de données depuis les variables d'environnement Heroku
+				$DATABASE_URL = getenv('DATABASE_URL');
 
-                if (!$DATABASE_URL) {
-                    die(json_encode(["error" => "DATABASE_URL non définie."]));
-                }
+				if (!$DATABASE_URL) {
+					die(json_encode(["error" => "DATABASE_URL non définie."]));
+				}
 
-                // Décomposer l'URL en ses parties
-                $parts = parse_url($DATABASE_URL);
-                $host = $parts["host"];
-                $user = $parts["user"];
-                $pass = $parts["pass"];
-                $port = $parts["port"];
-                $dbname = ltrim($parts["path"], "/");
-                $pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
-                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-                ]);
-                //récupère la valeur envoyé par l'URL
-                $recup= $_GET['idphoto'];
-                $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
-                $req->execute(['recup' => $recup]);
-                $resultat = $req->fetch(PDO::FETCH_ASSOC);
-                return $resultat;
+				// Décomposer l'URL en ses parties
+				$parts = parse_url($DATABASE_URL);
+				$host = $parts["host"];
+				$user = $parts["user"];
+				$pass = $parts["pass"];
+				$port = $parts["port"];
+				$dbname = ltrim($parts["path"], "/");
+				try {
+                    //récupère la valeur de l'id envoyé par l'URL
+                    $recup= $_GET['idphoto'];
+                    // Connexion à PostgreSQL
+					$pdo = new PDO("pgsql:host=$host;port=$port;dbname=$dbname", $user, $pass, [
+						PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+					]);
+                    $req = $pdo->prepare('SELECT * FROM categorie c NATURAL JOIN photo p  WHERE photoId = :recup ');
+                    $req->execute(['recup' => $recup]);
+                    $resultat = $req->fetch(PDO::FETCH_ASSOC);
+                    return $resultat;
+                } catch (PDOException $e) {
+                    http_response_code(500);
+                    echo json_encode(["error" => "Erreur de connexion : " . $e->getMessage()]);
+                    return null;
+                }  
             }
             if(isset($_GET['idphoto']))
             {
                 $res= recup_info()['nomfich'];
                 echo " <img src='data/". $res ."' importance='auto' alt=''>";
             }
+            
             $act= "modifier.html?idphoto=".$_GET['idphoto']."&idcat=".$_GET['idcat']."";
         echo " <form action= $act method='POST' name='formulaire' enctype='multipart/form-data'> ";
             ?>
