@@ -45,7 +45,7 @@
 
         </style>
 		<meta charset="utf-8" />
-        <TITLE  >Detail de Nom_fichier.jpg</TITLE>
+        <TITLE  >Detail de photo</TITLE>
     </HEAD>
     <BODY>
         <center><h2 class="titre">MINI-PINTEREST</h2></center>
@@ -61,7 +61,7 @@
         }
     ?>
         <div>
-        <a href="index.html" > 
+        <a href="index.php" > 
             <h5><span class="titre">◄ |M.P.|</span></h5>
             <span class="alert"> retour à l'accueil</span>
         </a>
