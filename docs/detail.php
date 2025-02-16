@@ -163,8 +163,10 @@
                         ?>
                 </tr>
             </tbody>
-
-			<?php
+            
+        </table>
+		
+		<?php
 				echo "
 				<a class='button_red' style=' background-color: #FFA07A;' 
 				href='modifier.php?idphoto=". $info1 ."&idcat=". $info2 ."' >
@@ -173,9 +175,6 @@
 				</div>
 			";
 			?>
-            
-        </table>
-		
 		</div>
         <?php
         function affic_cat($cate)
